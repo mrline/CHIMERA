@@ -16,16 +16,35 @@ https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0
 6. Have fun!
 
 # CLIFF NOTE FEATURES/METHODS:
-Correlated-K opacity treatment (Lacis & Oinas 1991; Irwin et al. 2008) in both emission and transmission.  For emission the "resort-rebin" on-the-fly gas mixing procedure is used (Molliere et al. 2015; Amundsen et al. 2017).  For transmission, seperate gas transmittances within each ray-cell are multiplied together.  
+Correlated-K opacity treatment (Lacis & Oinas 1991; Irwin et al. 2008) in both emission and transmission.  For emission the "resort-rebin" on-the-fly gas mixing procedure is used (Molliere et al. 2015; Amundsen et al. 2017).  For transmission, seperate gas transmittances within each ray-cell are multiplied together.  CK's generated from a variety of line-by-line cross-section databases, but most come from what is described in Freedman et al. 2014.  This is ever evolving... 
 
 Multiple scattering "emission" radiative transfer for both "internal" (planckian) source functions and external stellar flux (for reflection component) computed with the Two-Stream Source Function Technique (Toon et al. 1989, Marley et al. 2000).
 
-Ackerman & Marley 2001 "eddy-sed" cloud parameterization. This takes into account the change in particle size with altitude assuming said sizes are governed by a balance of sedimentation and uplift (through eddy diffusion).  Can specify a condensate to do this with (in the /ABSCOEFF_CK/MIE_COEFFS/ folder downloaded in step (2)). 
+Ackerman & Marley 2001 "eddy-sed" cloud parameterization. This takes into account the change in particle size with altitude assuming said sizes are governed by a balance of sedimentation and uplift (through eddy diffusion).  Can specify a condensate within the currently available sources (in the /ABSCOEFF_CK/MIE_COEFFS/ folder downloaded in step (2)). 
 
 Also has the "classic" boring gray cloud (through a single uniform opacity...not a cloud-top-pressure) and power law "haze" scattering.
 
+Chemically-Consistent (CC) or Free Retrieval.  The CC is based on a pre-computed chemistry grid as a function of T, P, Metallicity, and C/O (Lodders 2009 abundances).  Hacked quenching through the nitrogen and carbon species quench free parameters. Certainly an atmosphere can have infintely more composition dimensions.  Feel free to regenerate a chem grid with your favorite gibbs-free energy minimizer.  Whatever gases are included as opacities can be "free" retrieved.
+
+Double-Gray (Guillot 2010; Parmentier & Guillot 2014; Line et al. 2013) Temperature-profile parameterization (yes yes, it goes isothermal at low pressures).  Feel free to add other TP profile functions (e.g., the Madhusudhan & Seager 2009 is a nice one to try).
+
+Flexible for use with multiple Bayesian samplers. Right now it is (the notebooks) set up for both Dynesty and PyMultiNest.  Feel free to try it with EMCEE.  
+
+Can run on a multi-core laptop (takes a few hours with the notebooks), but is really designed to run on clusters. PyMultiNest is the one to use for cluster computing.
+
+Includes multiple "call_pymultinest..." routines for various scenarios as well as corrosponding plotting routines (plot_PMN...).  To be honest, I didn't spend a lot of time making the plotting routines fancy.  They are self-explanatory...
+
+# THINGS I DIDN'T ADD TO THIS BECAUSE I'M LAZY (BUT ARE FLOATING AROUND SOMEWHERE IN A SUBDIRECTORY ON THE ASU CLUSTER...)
+
+Filter/filter profiles for Spitzer/TESS/Kepler. This is fairly easy to do.  Modify the instrument_emission/transmission_non_uniform routines in fm.py.  You would load in the filter profiles and putz around with the arrays in that function. For spitzer don't forget to do lambdaFlambda in the profile integrals (depending on how the filter profile is defined..).
+
+Offset parameters for combined datasets (e.g., STIS+WFC3). Though this is also "easy" to do.
+
+The spot contamination thing in transmission (e.g., Rackham et al. 2017).  This can be done (e.g., Iyer & Line 2019) by loading in a "pre-wavelength-interpolated" stellar model grid (as a function of Teff) into xsects_HST/JWST, a linear interpolating function in fx_trans/trans_free, and the simple contamination formula (along with the corrosponding parameters).
 
 
+
+# CODE HISTORY (from 2012...)
 
 
 
