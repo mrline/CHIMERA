@@ -259,7 +259,7 @@ def xsects_JWST(wnomin, wnomax):
     logParr=np.array(hf['logParr'])   #-7.0 - 2.4
     gases=np.array(hf['gases'])  ##H2O  CH4  CO  CO2 NH3  N2   HCN   H2S  PH3  C2H2 C2H6  Na    K   TiO   VO   FeH  H    H2   He   e- h-  mmw
     hf.close()
-    pdb.set_trace()
+
     print('Cross-sections Loaded')
     return P,T,wno,g,wts,xsecarr,radius*1E-6,mies_arr,Fstar,logCtoO, logMet, Tarr, logParr, np.log10(gases)
 
