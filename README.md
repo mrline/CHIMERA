@@ -15,7 +15,7 @@ https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0
 5. Install the Nested Sampler packages (dynesty: https://github.com/joshspeagle/dynesty) and PyMultiNest (https://johannesbuchner.github.io/PyMultiNest/).  There are more pymultinest specific install instructions in the CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.ipynb demo.  
 6. Have fun!
 
-# CLIFF NOTE FEATURES/METHODS:
+# Cliff Notes ofFeatures/Methods:
 Correlated-K opacity treatment (Lacis & Oinas 1991; Irwin et al. 2008) in both emission and transmission.  For emission the "resort-rebin" on-the-fly gas mixing procedure is used (Molliere et al. 2015; Amundsen et al. 2017).  For transmission, seperate gas transmittances within each ray-cell are multiplied together.  CK's generated from a variety of line-by-line cross-section databases, but most come from what is described in Freedman et al. 2014.  This is ever evolving... 
 
 Multiple scattering "emission" radiative transfer for both "internal" (planckian) source functions and external stellar flux (for reflection component) computed with the Two-Stream Source Function Technique (Toon et al. 1989, Marley et al. 2000).
@@ -34,7 +34,7 @@ Can run on a multi-core laptop (takes a few hours with the notebooks), but is re
 
 Includes multiple "call_pymultinest..." routines for various scenarios as well as corrosponding plotting routines (plot_PMN...).  To be honest, I didn't spend a lot of time making the plotting routines fancy.  They are self-explanatory...
 
-# THINGS I DIDN'T ADD TO THIS BECAUSE I'M LAZY (BUT ARE FLOATING AROUND SOMEWHERE IN A SUBDIRECTORY ON THE ASU CLUSTER...)
+# Things I didn't do b/c I am lazy (but are floating around somehwere on the cluster...)
 
 Filter/filter profiles for Spitzer/TESS/Kepler. This is fairly easy to do.  Modify the instrument_emission/transmission_non_uniform routines in fm.py.  You would load in the filter profiles and putz around with the arrays in that function. For spitzer don't forget to do lambdaFlambda in the profile integrals (depending on how the filter profile is defined..).
 
@@ -42,9 +42,12 @@ Offset parameters for combined datasets (e.g., STIS+WFC3). Though this is also "
 
 The spot contamination thing in transmission (e.g., Rackham et al. 2017).  This can be done (e.g., Iyer & Line 2019) by loading in a "pre-wavelength-interpolated" stellar model grid (as a function of Teff) into xsects_HST/JWST, a linear interpolating function in fx_trans/trans_free, and the simple contamination formula (along with the corrosponding parameters).
 
+Make it "brown dwarf" friendly.  However, easily done, just get rid of "Fstar" in Fp/Fstar.  Probably best to make a new "fx" function (in fm.py).  
 
 
-# CODE HISTORY (from 2012...)
+# Code History (from 2012...)
+The Original version (Line et al. 2012) used the Reference Forward Model (http://eodg.atm.ox.ac.uk/RFM/#cant) for thermal emission combined with the "optimal estimation" approach (Rodgers 2000; Lee et al. 2012) (written in IDL!) to explore spectral "information content" with applications to the near infrared HST NICMOS (yeah...back in the day...) spectrum of HD 189733b. HITRAN/HiTEMP opacities were used. This was before ExoMol really started to crank out molecules.  In 2013 (Line et al. 2013a) I/we (fellow down-the-hall mate Xi Zhang) ditched RFM and wrote our own simple non-scattering emission RT (again in IDL!).  Since MCMC was becoming a "thing" (Madhusudhan et al. 2011; Benneke & Seager 2012 and too many conversations with fellow down-the-hall mate, Aaron Wolf), we decided to test the differences in various "parameter estimators"
+
 
 
 
