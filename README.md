@@ -15,7 +15,19 @@ https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0
 5. Install the Nested Sampler packages (dynesty: https://github.com/joshspeagle/dynesty) and PyMultiNest (https://johannesbuchner.github.io/PyMultiNest/).  There are more pymultinest specific install instructions in the CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.ipynb demo.  
 6. Have fun!
 
-CLIFF NOTE FEATURES/METHODS:
--Correlated-K opacity treatment (Lacis & Oinas 1991) in both emission and transmission.  For emission the "resort-rebin" on-the-fly gas mixing procedure is used (Molliere et al. 2015; Amundsen et al. 2017).
--
+# CLIFF NOTE FEATURES/METHODS:
+Correlated-K opacity treatment (Lacis & Oinas 1991; Irwin et al. 2008) in both emission and transmission.  For emission the "resort-rebin" on-the-fly gas mixing procedure is used (Molliere et al. 2015; Amundsen et al. 2017).  For transmission, seperate gas transmittances within each ray-cell are multiplied together.  
+
+Multiple scattering "emission" radiative transfer for both "internal" (planckian) source functions and external stellar flux (for reflection component) computed with the Two-Stream Source Function Technique (Toon et al. 1989, Marley et al. 2000).
+
+Ackerman & Marley 2001 "eddy-sed" cloud parameterization. This takes into account the change in particle size with altitude assuming said sizes are governed by a balance of sedimentation and uplift (through eddy diffusion).  Can specify a condensate to do this with (in the /ABSCOEFF_CK/MIE_COEFFS/ folder downloaded in step (2)). 
+
+Also has the "classic" boring gray cloud (through a single uniform opacity...not a cloud-top-pressure) and power law "haze" scattering.
+
+
+
+
+
+
+
 
