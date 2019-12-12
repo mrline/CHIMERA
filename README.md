@@ -54,5 +54,5 @@ In 2013 (Line et al. 2013a) I/we (fellow down-the-hallmate Xi Zhang) ditched RFM
 
 
 # Credits
-Lots of folks have helped with/contributed to/influenced various flavors of the code and key relevent discussions over the years.  So thanks to (in no particular order...probably chronological) Xi Zhang, Aaron Wolf, Leigh Fletcher, Gautam Vasisht, Pin Chen, Mark Swain, Yuk Yung, Heather Knutson, Jonathan Fortney, Jacob Lustig-Yeager,  Kat Feng, Vivien Parmentier, Natasha Batalha, Mark Marley, Richard Freedman, Cesar Montero, Kyle Luther, Jacob Bean, Laura Kreidberg, Kevin Stevenson, Tom Greene, Jean-Michel Desert, Chuhong Mai, Aisha Iyer...
+Lots of folks have helped with/contributed to/influenced various flavors of the code and key relevent discussions over the years.  So thanks to (in no particular order...probably chronological) Xi Zhang, Aaron Wolf, Leigh Fletcher, Gautam Vasisht, Pin Chen, Mark Swain, Yuk Yung, Josh Kammer, Heather Knutson, Jonathan Fortney, Jacob Lustig-Yeager,  Kat Feng, Vivien Parmentier, Natasha Batalha, Mark Marley, Richard Freedman, Cesar Montero, Kyle Luther, Dylan Teal, Jacob Bean, Laura Kreidberg, Kevin Stevenson, Tom Greene, Jean-Michel Desert, Ingo Waldmann, Joe Barstow Eberhardt, Marco Rochetto, Ryan Garland, Chuhong Mai, Aisha Iyer...
 
