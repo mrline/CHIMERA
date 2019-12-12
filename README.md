@@ -42,6 +42,8 @@ Offset parameters for combined datasets (e.g., STIS+WFC3). Though this is also "
 
 The spot contamination thing in transmission (e.g., Rackham et al. 2017).  This can be done (e.g., Iyer & Line 2019) by loading in a "pre-wavelength-interpolated" stellar model grid (as a function of Teff) into xsects_HST/JWST, a linear interpolating function in fx_trans/trans_free, and the simple contamination formula (along with the corresponding parameters).
 
+This version doesn't have the "patchy clouds" (e.g., Line & Parmentier 2016), though it is straight forward to add by linearly combining a "clear" and "cloudy" atmosphere (the output of "tran"--make another output and but zero out f_r) in the fx_trans.. routines.
+
 Make it "brown dwarf" friendly.  However, easily done, just get rid of "Fstar" in Fp/Fstar.  Probably best to make a new "fx" function (in fm.py).  
 
 
