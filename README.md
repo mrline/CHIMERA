@@ -15,7 +15,7 @@ https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0
 5. Install the Nested Sampler packages (dynesty: https://github.com/joshspeagle/dynesty) and PyMultiNest (https://johannesbuchner.github.io/PyMultiNest/).  There are more pymultinest specific install instructions in the CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.ipynb demo.  
 6. Have fun!
 
-# Cliff Notes ofFeatures/Methods:
+# Cliff Notes of Features/Methods:
 Correlated-K opacity treatment (Lacis & Oinas 1991; Irwin et al. 2008) in both emission and transmission.  For emission the "resort-rebin" on-the-fly gas mixing procedure is used (Molliere et al. 2015; Amundsen et al. 2017).  For transmission, seperate gas transmittances within each ray-cell are multiplied together.  CK's generated from a variety of line-by-line cross-section databases, but most come from what is described in Freedman et al. 2014.  This is ever evolving... 
 
 Multiple scattering "emission" radiative transfer for both "internal" (planckian) source functions and external stellar flux (for reflection component) computed with the Two-Stream Source Function Technique (Toon et al. 1989, Marley et al. 2000).
@@ -45,8 +45,10 @@ The spot contamination thing in transmission (e.g., Rackham et al. 2017).  This 
 Make it "brown dwarf" friendly.  However, easily done, just get rid of "Fstar" in Fp/Fstar.  Probably best to make a new "fx" function (in fm.py).  
 
 
-# Code History (from 2012...)
-The Original version (Line et al. 2012) used the Reference Forward Model (http://eodg.atm.ox.ac.uk/RFM/#cant) for thermal emission combined with the "optimal estimation" approach (Rodgers 2000; Lee et al. 2012) (written in IDL!) to explore spectral "information content" with applications to the near infrared HST NICMOS (yeah...back in the day...) spectrum of HD 189733b. HITRAN/HiTEMP opacities were used. This was before ExoMol really started to crank out molecules.  In 2013 (Line et al. 2013a) I/we (fellow down-the-hall mate Xi Zhang) ditched RFM and wrote our own simple non-scattering emission RT (again in IDL!).  Since MCMC was becoming a "thing" (Madhusudhan et al. 2011; Benneke & Seager 2012 and too many conversations with fellow down-the-hall mate, Aaron Wolf), we decided to test the differences in various "parameter estimators"
+# Code History (from 2012...) tl;dr
+The primordial version (Line et al. 2012) used the Reference Forward Model (http://eodg.atm.ox.ac.uk/RFM/#cant) for thermal emission combined with the "optimal estimation" approach (Rodgers 2000; Lee et al. 2012) (written in IDL!) to explore spectral "information content" with applications to the near infrared HST NICMOS (yeah...back in the day...) spectrum of HD 189733b. HITRAN/HITEMP opacities were used. This was before ExoMol really started to crank out molecules.  
+
+In 2013 (Line et al. 2013a) I/we (fellow down-the-hallmate Xi Zhang) ditched RFM and wrote our own simple non-scattering emission RT (again in IDL!).  Since MCMC was becoming a "thing" (Madhusudhan et al. 2011; Benneke & Seager 2012 and too many conversations with fellow down-the-hall mate, Aaron Wolf), we decided to test the differences in various "parameter estimators". These were optimal estimation (the classic planetary tool of choice), boot-strap monte carlo, and markov chain monte carlo.  There weren't many "git-able" MCMC routines in IDL in 2013 (and I had not yet heard of the pythons), so we wrote our own Differential Evolution MCMC (ter Braak 2006;2008). We found, in general, that these approaches agreed when the data were "good"--even optimal estimation (with its gaussian posterior approximation, like any non-linear minimizer)--but disagreed when the data were sparse (low wavelength coverage, low SNR etc.)--unsurpisingly.  Shortly there-after we decided to do "usefull" science by performing a "uniform" analysis on the currently available secondary eclipse spectra--around 9 planets (mind you, this is before HST WFC3 spatial scan was a thing, so all the data was, meh). Inspired by the notion of "high C/O" from the Madhushdhan et al. 2011 nature paper, we wanted to see if that held true for other planets....MORE tl;dr coming      
 
 
 
