@@ -12,7 +12,7 @@ Sorry. No fancy "read-the-docs" page. That's ok. Words are words regardless of t
 2. Go into the ABSCOEFF_CK folder. You will find a readme. It tells you to download a lot of large files (opacities) here:
 https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0
 3.  Make sure you have python3/anaconda3 with the numba package. I'm running on a MAC OS 10.13.6 (High Sierra) with python 3.6.4.
-4. Once everything is downloaded, go into the MASTER_CODE folder go through the notebook tutorials (start with CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.ipynb).  Further instructions await in the notebook.
+4. Once everything is downloaded, go into the MASTER_ROUTINES folder go through the notebook tutorials (start with CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.ipynb).  Further instructions await in the notebook.
 5. Install the Nested Sampler packages (dynesty: https://github.com/joshspeagle/dynesty) and PyMultiNest (https://johannesbuchner.github.io/PyMultiNest/).  There are more pymultinest specific install instructions in the CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.ipynb demo.  
 6. Have fun!
 
