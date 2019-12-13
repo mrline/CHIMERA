@@ -5,7 +5,7 @@ What is uploaded here is the latest and "greatest" version in Pure Python 3 and 
 
 The code is meant to be flexible with numerous radiative transfer related modules in /MASTER_CODE/fm.py. Certainly this code does not take into account all infinite assumptions/possibilities for parameterizations.  I leave it to the user to modify at will (e.g., change up the TP profile parameterization, or clouds, etc.).  Have a look. Right now it's partially commented, I'll do more when/if I have time. 
 
-Sorry. No fancy "read-the-docs" page. That's ok. Words are words, doesn't matter the format.
+Sorry. No fancy "read-the-docs" page. That's ok. Words are words regardless of the format.
 
 "INSTALL" INSTRUCTIONS:
 1. Clone/download this project 
@@ -15,6 +15,8 @@ https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0
 4. Once everything is downloaded, go into the MASTER_CODE folder go through the notebook tutorials (start with CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.ipynb).  Further instructions await in the notebook.
 5. Install the Nested Sampler packages (dynesty: https://github.com/joshspeagle/dynesty) and PyMultiNest (https://johannesbuchner.github.io/PyMultiNest/).  There are more pymultinest specific install instructions in the CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.ipynb demo.  
 6. Have fun!
+
+Note: This code is very much **not a black box** (sorry?). The jupyter notebooks and the "call_pymultinest.../plot_PMN..." routines are the closest to black box, but with the intent of forcing the user to go through some "training".  Otherwise, use the notebooks as a template for modification if you want to add new parameters etc.  The "fx" routines are meant to be flexible enough to swap out different parameterizations for various custom fizzix (e.g., temperature profiles, cloud models, etc.).   In general, radiative transfer simply requires opacities and temperatures.  However you can ram those into the "tran" or "rad" routines, have at it.  
 
 # Cliff Notes of Features/Methods:
 Correlated-K opacity treatment (Lacis & Oinas 1991; Irwin et al. 2008) in both emission and transmission.  For emission the "resort-rebin" on-the-fly gas mixing procedure is used (Molliere et al. 2015; Amundsen et al. 2017).  For transmission, seperate gas transmittances within each ray-cell are multiplied together.  CK's generated from a variety of line-by-line cross-section databases, but most come from what is described in Freedman et al. 2014.  This is ever evolving... 
@@ -45,7 +47,9 @@ The spot contamination thing in transmission (e.g., Rackham et al. 2017).  This 
 
 This version doesn't have the "patchy clouds" (e.g., Line & Parmentier 2016), though it is straight forward to add by linearly combining a "clear" and "cloudy" atmosphere (the output of "tran"--make another output and but zero out f_r) in the fx_trans.. routines.
 
-Make it "brown dwarf" friendly.  However, easily done, just get rid of "Fstar" in Fp/Fstar.  Probably best to make a new "fx" function (in fm.py).  
+Make it "brown dwarf" friendly.  However, easily done, just get rid of "Fstar" in Fp/Fstar.  Probably best to make a new "fx" function (in fm.py).  Probably don't use the current TP profile parameterzation as that is not good for BDs (e.g., eddington approximation is not wise for this).  
+
+Add support for multiple "TP" profiles (e.g., the Feng et al. 2016 thing).  This requires care with geometry. Linear combinations of patches/columns is easy enough by calling "rad" multiple times with different TPs and weighting the patches appropriately (which depends on your geometry method).
 
 
 # Code History (from 2012...) tl;dr
