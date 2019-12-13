@@ -5,6 +5,7 @@ What is uploaded here is the latest and "greatest" version in Pure Python 3 and 
 
 The code is meant to be flexible with numerous radiative transfer related modules in /MASTER_CODE/fm.py. Certainly this code does not take into account all infinite assumptions/possibilities for parameterizations.  I leave it to the user to modify at will (e.g., change up the TP profile parameterization, or clouds, etc.).  Have a look. Right now it's partially commented, I'll do more when/if I have time. 
 
+Sorry. No fancy "read-the-docs" page. That's ok. Words are words, doesn't matter the format.
 
 "INSTALL" INSTRUCTIONS:
 1. Clone/download this project 
