@@ -17,220 +17,184 @@ from scipy.linalg import solve_banded
 import pdb
 import scipy
 import datetime
-
-
-
-
-
+import os
 
 ##############################   OPACITY ROUTINES  #################################
 ####################################################################################
 ####################################################################################
-'''
-#*******************************************************************
- FILE: xsects_JWST
 
- DESCRIPTION: Routine that loads in the correlated-K opacities
- applicable to JWST. Here we assume the data will be binned 
- to an R=100 and span 50 - 28000 cm-1 (200 - 0.3 um)
- Also loads in Mie scattering properties, stellar spectrum
- for emission, and grid chemistry.  Note, to change Mie condensate, 
- change the name in this routine.  Have a look in ../ABSCOEFF_CK/MIES/
- for a current list of condensates.  Feel free to also
- load in a different stellar spectrum (for emission). 
- Does not matter where you get it from just so long as you can
- save it as a .h5 file in wavelength (from low to high)
- and flux, both in MKS units (m, W/m2/m)
+def xsects(wnomin, wnomax, observatory, directory, stellar_file=None,
+    cond_name='MgSiO3',gauss_pts='default'):
+    """Get correlated-K opacities, stellar spectrum, and chemistry 
 
-  
- INPUTS: 
- wnomin=minimum wavenumber for computation (min 50)
- wnomax=maximum wavenumber for computation (max 28000)
-
- RETURNS: 
- ck-coefficient relaevant properties........
- P=pressure grid for cross-sections
- T=temperature grid for cross-sections (not the same as chemistry)
- wno=wavenumber grid of xsecs (here, R=100)
- g=CK gauss quad g-ordinate
- wts=CK gauss quad weights
- xsecarr= Pre-computed grid of CK coefficients as a function of
- Gases x Pressure x Temperature x Wavenumber x GaussQuad Points. 
+    Routine that loads in the correlated-K opacities
+    applicable to JWST. Here we assume the data will be binned 
+    to an R=100 and span 50 - 28000 cm-1 (200 - 0.3 um)
+    Also loads in Mie scattering properties, stellar spectrum
+    for emission, and grid chemistry.  Note, to change Mie condensate, 
+    change the name in this routine.  Have a look in ../ABSCOEFF_CK/MIES/
+    for a current list of condensates.  Feel free to also
+    load in a different stellar spectrum (for emission). 
+    Does not matter where you get it from just so long as you can
+    save it as a .h5 file in wavelength (from low to high)
+    and flux, both in MKS units (m, W/m2/m)
 
 
- mie scattering/condensate relevant properties
- radius*1E-6 = condensate particle sizes (0.01 - 316 um)
- mies_arr = mie properties array.  It contains the total extinction
- cross-section (first element--Qext*pi*r^2), single scatter albedo (second,
- Qs/Qext),and assymetry parameter (third) as a function of condensate (in
- this case, just one), particle radius (0.01 - 316 um), and wavenumber. These
- were generated offline with the "pymiecoated" routine using
- the indicies of refraction given in Wakeford & Sing 2017.
- (Condensates x MieProperties x size bins x wavenumber)
-
- star properties.....
- Fstar=Stellar Flux spectrum binned to cross-section wavenumber grid
-
- chemistry grid properties......
- logCtoO = chemistry C/O grid in log10 (-2.0 - +0.3, -0.26 = solar)
- logMet = chemistry metallicity grid in log10 (-2 - +3, 0=solar)
- Tarr = Chemistry Temperature grid (400 - 3400K)
- logParr = Chemistry Pressure grid (-7.0 - 2.4, log10 in bar)
- np.log10(gases) = Chemistry grid of molecular gas abundances (and 
- mean molecular weight) as a function of Metallicity, C/O, T, and P.
-(CtoO x logMet x Tarr x Gases x logParr). Gases: H2O  CH4  CO  CO2 NH3  N2  
- HCN   H2S  PH3  C2H2 C2H6  Na    K   TiO   VO   FeH  H    H2   He   e- h-  mmw. 
- This grid was generated with NASA CEA2 routine and assumes pure
- equilibrium+condensate chemistry (no rainout here).
+    Parameters
+    ----------
+    wnomin : float 
+        minimum wavenumber for computation (min 50 for JWST, 2000 for HST)
+    wnomax : float 
+        maximum wavenumber for computation (max 28000 for JWST, 30000 for HST)
+    observatory : str 
+        Options are 'JWST' or 'HST'
+    directory : str
+        Directory path to zip file from 
+        https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0&lst=
+    stellar_file : str, optional 
+        Stellar file for emission spectra
+    cond_name : str , optional
+        Name of condensate to compute cloud, if using Ackerman Marley cloud scheme
+    gauss_pts : str , optional
+        Number of gauss points for ck opacity tables. Default is to use 
+        10 for HST and 20 for JWST. 
+        Options are : ['default', '10', '20']
 
 
-#*******************************************************************
-'''
-def xsects_JWST(wnomin, wnomax):
-   
+    Returns
+    -------
+    P
+        pressure grid for C-K-coefficient relaevant properties
+
+    T
+        temperature grid for C-K-coefficient relaevant properties (not the same as chemistry)
+    wno
+        wavenumber grid of xsecs (here, R=100)
+    g
+        CK gauss quad g-ordinate
+    wts
+        CK gauss quad weights
+    xsecarr 
+        Pre-computed grid of CK coefficients as a function of
+        Gases x Pressure x Temperature x Wavenumber x GaussQuad Points. 
+    radius
+        Mie scattering/condensate relevant properties. 
+        Condensate particle sizes in micron (0.01 - 316 um)
+    mies_arr
+        mie properties array.  It contains the total extinction
+        cross-section (first element--Qext*pi*r^2), single scatter albedo (second,
+        Qs/Qext),and assymetry parameter (third) as a function of condensate (in
+        this case, just one), particle radius (0.01 - 316 um), and wavenumber. These
+        were generated offline with the "pymiecoated" routine using
+        the indicies of refraction given in Wakeford & Sing 2017.
+        (Condensates x MieProperties x size bins x wavenumber)
+    Fstar 
+        Stellar Flux spectrum binned to cross-section wavenumber grid
+    logCtoO
+        chemistry C/O grid in log10 (-2.0 - +0.3, -0.26 = solar)
+    logMet
+        chemistry metallicity grid in log10 (-2 - +3, 0=solar)
+    Tarr
+        Chemistry Temperature grid (400 - 3400K)
+    logParr
+        Chemistry Pressure grid (-7.0 - 2.4, log10 in bar)
+    gases
+        log of Chemistry grid of molecular gas abundances (and 
+        mean molecular weight) as a function of Metallicity, C/O, T, and P.
+        (CtoO x logMet x Tarr x Gases x logParr). Gases: H2O  CH4  CO  CO2 NH3  N2  
+        HCN   H2S  PH3  C2H2 C2H6  Na    K   TiO   VO   FeH  H    H2   He   e- h-  mmw. 
+        This grid was generated with NASA CEA2 routine and assumes pure
+        equilibrium+condensate chemistry (no rainout here).
+    """
     ### Read in CK arrays (can switch between 10 & 20 CK gp's )
-    # H2H2
-    file='../ABSCOEFF_CK/H2H2_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    wno=np.array(hf['wno'])
-    T=np.array(hf['T'])
-    P=np.array(hf['P'])
-    g=np.array(hf['g'])
-    wts=np.array(hf['wts'])
-    kcoeff=np.array(hf['kcoeff'])
-    xsecarrH2H2=10**(kcoeff-4.)
-    hf.close()
-    # H2He
-    file='../ABSCOEFF_CK/H2He_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrH2He=10**(kcoeff-4.)
-    # H2O
-    file='../ABSCOEFF_CK/H2O_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrH2O=10**(kcoeff-4.)
-    # CH4
-    file='../ABSCOEFF_CK/CH4_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrCH4=10**(kcoeff-4.)
-    # CO
-    file='../ABSCOEFF_CK/CO_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrCO=10**(kcoeff-4.)
-    # CO2
-    file='../ABSCOEFF_CK/CO2_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrCO2=10**(kcoeff-4.)
-    # NH3
-    file='../ABSCOEFF_CK/NH3_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrNH3=10.**(kcoeff-4.)
-    # Na
-    file='../ABSCOEFF_CK/Na_allard_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrNa=10.**(kcoeff-4.)
-    # K
-    file='../ABSCOEFF_CK/K_allard_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrK=10.**(kcoeff-4.)
-    # TiO
-    file='../ABSCOEFF_CK/TiO_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrTiO=10.**(kcoeff-4.)
-    # VO
-    file='../ABSCOEFF_CK/VO_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrVO=10.**(kcoeff-4.)
-    # C2H2
-    file='../ABSCOEFF_CK/C2H2_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrC2H2=10.**(kcoeff-4.)
-    # HCN
-    file='../ABSCOEFF_CK/HCN_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrHCN=10.**(kcoeff-4.)
-    # H2S
-    file='../ABSCOEFF_CK/H2S_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrH2S=10.**(kcoeff-4.)
-    # FeH
-    file='../ABSCOEFF_CK/FeH_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrFeH=10.**(kcoeff-4.)
-    # HMFF
-    file='../ABSCOEFF_CK/HMFF_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrFF=10**(kcoeff-4.)
-    # HMBF
-    file='../ABSCOEFF_CK/HMFF_CK_R100_20gp_50_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrBF=10**(kcoeff-4.)
+
+    
+    available_opacities = ['H2H2', 'H2He', 'H2O','CH4','CO','CO2','NH3',
+                          'Na_allard', 'K_allard','TiO','VO','C2H2','HCN',
+                          'H2S','FeH','HMFF','HMBF']
+
+    #set up filename tag 
+    if observatory == 'HST':
+        if gauss_pts == 'default': 
+            gp = '10'
+        elif gauss_pts in ['10','20']:
+            gp = gauss_pts
+        else: 
+            raise Exception('Invalid gauss point choice.')
+
+        filename = '_CK_STIS_WFC3_'+gp+'gp_2000_30000wno.h5'
+
+    elif observatory =='JWST':
+        if gauss_pts == 'default': 
+            gp = '20'
+        elif gauss_pts in ['10','20']:
+            gp = gauss_pts
+        else: 
+            raise Exception('Invalid gauss point choice.')
+        filename = '_CK_R100_'+gp+'gp_50_30000wno.h5'
+    else: 
+        raise Exception ('Pick a valid observatory: HST or JWST')
+
+    #set up cross section array list 
+    xsecarr = []
+    for mol in available_opacities: 
+        file=os.path.join(directory,mol+filename)
+        
+        #open up h5 file
+        hf=h5py.File(file, 'r')
+
+        #get parameters that are uniform for everything
+        if mol == 'H2H2':
+            wno=np.array(hf['wno'])
+            T=np.array(hf['T'])
+            P=np.array(hf['P'])
+            g=np.array(hf['g'])
+            wts=np.array(hf['wts'])
+
+        #get kcoefficients for each molecule
+        kcoeff=np.array(hf['kcoeff'])
+        xsecarr_mol=10**(kcoeff-4.)
+        hf.close()
+
+        #add it to master list 
+        xsecarr += [xsecarr_mol]
 
     #super big array stuffing all the gases in    
-    xsecarr = np.log10(np.array([xsecarrH2H2,xsecarrH2He, xsecarrH2O, xsecarrCH4, xsecarrCO,xsecarrCO2,xsecarrNH3,xsecarrNa, xsecarrK, xsecarrTiO, xsecarrVO, xsecarrC2H2,xsecarrHCN,xsecarrH2S,xsecarrFeH,xsecarrFF,xsecarrBF]))
+    xsecarr = np.log10(np.array(xsecarr))
 
 
 
     #stellar flux file------------------------------------
-    hf=h5py.File('PYSYNPHOT_PHOENIX_WASP43_TEPCat.h5', 'r')  #user should generate their own stellar spectrum from whatever database they choose, save as .h5 
-    lambdastar=np.array(hf['lambdastar'])  #in MKS (meters)
-    Fstar0=np.array(hf['Fstar0'])  #in MKS (W/m2/m)
-    hf.close()
+    if stellar_file != None:
+        hf=h5py.File(stellar_file, 'r')  #user should generate their own stellar spectrum from whatever database they choose, save as .h5 
+        lambdastar=np.array(hf['lambdastar'])  #in MKS (meters)
+        Fstar0=np.array(hf['Fstar0'])  #in MKS (W/m2/m)
+        hf.close()
 
-    lambdastar=lambdastar*1E6
-    loc=np.where((lambdastar >= 1E4/wno[-1]) & (lambdastar <=1E4/wno[0]))
-    lambdastar=lambdastar[loc]
-    lambdastar_hi=np.arange(lambdastar.min(),lambdastar.max(),0.0001)
-    Fstar0=Fstar0[loc]
-    Fstar0=interp(np.log10(lambdastar_hi), np.log10(lambdastar), Fstar0)
+        lambdastar=lambdastar*1E6
+        loc=np.where((lambdastar >= 1E4/wno[-1]) & (lambdastar <=1E4/wno[0]))
+        lambdastar=lambdastar[loc]
+        lambdastar_hi=np.arange(lambdastar.min(),lambdastar.max(),0.0001)
+        Fstar0=Fstar0[loc]
+        Fstar0=interp(np.log10(lambdastar_hi), np.log10(lambdastar), Fstar0) 
 
-    #smooth stellar spectrum to CK bins
-    szmod=len(wno)
-    Fstar_smooth=np.zeros(szmod)
-    dwno=wno[1:]-wno[:-1]
-    for i in range(szmod-1):
-        i=i+1
-        loc=np.where((1E4/lambdastar_hi >= wno[i]-0.5*dwno[i-1]) & (1E4/lambdastar_hi < wno[i]+0.5*dwno[i-1]))
-        Fstar_smooth[i]=np.mean(Fstar0[loc])
+        #smooth stellar spectrum to CK bins
+        szmod=len(wno)
+        Fstar_smooth=np.zeros(szmod)
+        dwno=wno[1:]-wno[:-1]
+        for i in range(szmod-1):
+            i=i+1
+            loc=np.where((1E4/lambdastar_hi >= wno[i]-0.5*dwno[i-1]) & (1E4/lambdastar_hi < wno[i]+0.5*dwno[i-1]))
+            Fstar_smooth[i]=np.mean(Fstar0[loc])
 
-    Fstar_smooth[0]=Fstar_smooth[1]
-    Fstar_smooth[-1]=Fstar_smooth[-2]
-    Fstar=Fstar_smooth
-    
+        Fstar_smooth[0]=Fstar_smooth[1]
+        Fstar_smooth[-1]=Fstar_smooth[-2]
+        Fstar=Fstar_smooth
+    else: 
+        Fstar = [np.nan]
+
     #loading mie coefficients-----------------------------
-    cond_name='MgSiO3'  #feel free to swap out with anyone in ./MIE_COEFFS/....
-    file='../ABSCOEFF_CK/MIE_COEFFS/'+cond_name+'_r_0.01_300um_wl_0.3_200um_interp_R100_20gp_50_30000wno.h5'
+    file=os.path.join(directory, 'MIE_COEFFS',cond_name+'_r_0.01_300um_wl_0.3_200um_interp_R100_20gp_50_30000wno.h5')
     hf=h5py.File(file, 'r')
     wno_M=np.array(hf['wno_M'])
     radius=np.array(hf['radius'])
@@ -249,246 +213,13 @@ def xsects_JWST(wnomin, wnomax):
     wno=wno[loc]
     xsecarr=xsecarr[:,:,:,loc,:]
     mies_arr=mies_arr[:,:,:,loc]    
-    Fstar=Fstar[loc]
+    if stellar_file != None: 
+        Fstar=Fstar[loc]
+    else: 
+        Fstar = np.array(Fstar*len(loc))
 
     #loading interpolatedable chemistry grid as a function of C/O, Metallicity, T, and P (for many gases)
-    hf=h5py.File('../ABSCOEFF_CK/CHEM/chem_grid.h5', 'r')
-    logCtoO=np.array(hf['logCtoO'])  #-2.0 - 0.3
-    logMet=np.array(hf['logMet']) #-2.0 - 3.0
-    Tarr=np.array(hf['Tarr'])  #400 - 3400
-    logParr=np.array(hf['logParr'])   #-7.0 - 2.4
-    gases=np.array(hf['gases'])  ##H2O  CH4  CO  CO2 NH3  N2   HCN   H2S  PH3  C2H2 C2H6  Na    K   TiO   VO   FeH  H    H2   He   e- h-  mmw
-    hf.close()
-
-    print('Cross-sections Loaded')
-    return P,T,wno,g,wts,xsecarr,radius*1E-6,mies_arr,Fstar,logCtoO, logMet, Tarr, logParr, np.log10(gases)
-
-'''
-#*******************************************************************
- FILE: xsects_JWST
-
- DESCRIPTION: Routine that loads in the correlated-K opacities
- applicable to HST/STIS/Spitzer. These are precomputes
- at an R=200 < 5 um and R=500 < 1um.
- Also loads in Mie scattering properties, stellar spectrum
- for emission, and grid chemistry.  Note, to change Mie condensate, 
- change the name in this routine.  Have a look in ../ABSCOEFF_CK/MIES/
- for a current list of condensates.  Feel free to also
- load in a different stellar spectrum (for emission). 
- Does not matter where you get it from just so long as you can
- save it as a .h5 file in wavelength (from low to high)
- and flux, both in MKS units (m, W/m2/m)
-
-  
- INPUTS: 
- wnomin=minimum wavenumber for computation (min 50)
- wnomax=maximum wavenumber for computation (max 28000)
-
- RETURNS: 
- ck-coefficient relaevant properties........
- P=pressure grid for cross-sections
- T=temperature grid for cross-sections (not the same as chemistry)
- wno=wavenumber grid of xsecs (here, R=100)
- g=CK gauss quad g-ordinate
- wts=CK gauss quad weights
- xsecarr= Pre-computed grid of CK coefficients as a function of
- Gases x Pressure x Temperature x Wavenumber x GaussQuad Points. 
-
-
- mie scattering/condensate relevant properties
- radius*1E-6 = condensate particle sizes (0.01 - 316 um)
- mies_arr = mie properties array.  It contains the total extinction
- cross-section (first element--Qext*pi*r^2), single scatter albedo (second,
- Qs/Qext),and assymetry parameter (third) as a function of condensate (in
- this case, just one), particle radius (0.01 - 316 um), and wavenumber. These
- were generated offline with the "pymiecoated" routine using
- the indicies of refraction given in Wakeford & Sing 2017.
- (Condensates x MieProperties x size bins x wavenumber)
-
- star properties.....
- Fstar=Stellar Flux spectrum binned to cross-section wavenumber grid
-
- chemistry grid properties......
- logCtoO = chemistry C/O grid in log10 (-2.0 - +0.3, -0.26 = solar)
- logMet = chemistry metallicity grid in log10 (-2 - +3, 0=solar)
- Tarr = Chemistry Temperature grid (400 - 3400K)
- logParr = Chemistry Pressure grid (-7.0 - 2.4, log10 in bar)
- np.log10(gases) = Chemistry grid of molecular gas abundances (and 
- mean molecular weight) as a function of Metallicity, C/O, T, and P.
-(CtoO x logMet x Tarr x Gases x logParr). Gases: H2O  CH4  CO  CO2 NH3  N2  
- HCN   H2S  PH3  C2H2 C2H6  Na    K   TiO   VO   FeH  H    H2   He   e- h-  mmw. 
- This grid was generated with NASA CEA2 routine and assumes pure
- equilibrium+condensate chemistry (no rainout here).
-
-#*******************************************************************
-'''
-def xsects_HST(wnomin, wnomax):
-   
-    ### Read in CK arrays (can switch between 10 & 20 CK gp's )
-    # H2H2
-    file='../ABSCOEFF_CK/H2H2_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    wno=np.array(hf['wno'])
-    T=np.array(hf['T'])
-    P=np.array(hf['P'])
-    g=np.array(hf['g'])
-    wts=np.array(hf['wts'])
-    kcoeff=np.array(hf['kcoeff'])
-    xsecarrH2H2=10**(kcoeff-4.)
-    hf.close()
-    # H2He
-    file='../ABSCOEFF_CK/H2He_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrH2He=10**(kcoeff-4.)
-    # H2O
-    file='../ABSCOEFF_CK/H2O_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrH2O=10**(kcoeff-4.)
-    # CH4
-    file='../ABSCOEFF_CK/CH4_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrCH4=10**(kcoeff-4.)
-    # CO
-    file='../ABSCOEFF_CK/CO_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrCO=10**(kcoeff-4.)
-    # CO2
-    file='../ABSCOEFF_CK/CO2_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrCO2=10**(kcoeff-4.)
-    # NH3
-    file='../ABSCOEFF_CK/NH3_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrNH3=10.**(kcoeff-4.)
-    # Na
-    file='../ABSCOEFF_CK/Na_allard_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrNa=10.**(kcoeff-4.)
-    # K
-    file='../ABSCOEFF_CK/K_allard_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrK=10.**(kcoeff-4.)
-    # TiO
-    file='../ABSCOEFF_CK/TiO_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrTiO=10.**(kcoeff-4.)
-    # VO
-    file='../ABSCOEFF_CK/VO_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrVO=10.**(kcoeff-4.)
-    # C2H2
-    file='../ABSCOEFF_CK/C2H2_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrC2H2=10.**(kcoeff-4.)
-    # HCN
-    file='../ABSCOEFF_CK/HCN_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrHCN=10.**(kcoeff-4.)
-    # H2S
-    file='../ABSCOEFF_CK/H2S_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrH2S=10.**(kcoeff-4.)
-    # FeH
-    file='../ABSCOEFF_CK/FeH_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrFeH=10.**(kcoeff-4.)
-    # HMFF
-    file='../ABSCOEFF_CK/HMFF_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrFF=10**(kcoeff-4.)
-    # HMBF
-    file='../ABSCOEFF_CK/HMFF_CK_STIS_WFC3_10gp_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    kcoeff=np.array(hf['kcoeff'])
-    hf.close()
-    xsecarrBF=10**(kcoeff-4.)
-
-    #super big array stuffing all the gases in    
-    xsecarr = np.log10(np.array([xsecarrH2H2,xsecarrH2He, xsecarrH2O, xsecarrCH4, xsecarrCO,xsecarrCO2,xsecarrNH3,xsecarrNa, xsecarrK, xsecarrTiO, xsecarrVO, xsecarrC2H2,xsecarrHCN,xsecarrH2S,xsecarrFeH,xsecarrFF,xsecarrBF]))
-
-
-
-    #stellar flux file------------------------------------
-    hf=h5py.File('PYSYNPHOT_PHOENIX_WASP43_TEPCat.h5', 'r')  #user should generate their own stellar spectrum from whatever database they choose, save as .h5 
-    lambdastar=np.array(hf['lambdastar'])  #in MKS (meters)
-    Fstar0=np.array(hf['Fstar0'])  #in MKS (W/m2/m)
-    hf.close()
-
-    lambdastar=lambdastar*1E6
-    loc=np.where((lambdastar >= 1E4/wno[-1]) & (lambdastar <=1E4/wno[0]))
-    lambdastar=lambdastar[loc]
-    lambdastar_hi=np.arange(lambdastar.min(),lambdastar.max(),0.0001)
-    Fstar0=Fstar0[loc]
-    Fstar0=interp(np.log10(lambdastar_hi), np.log10(lambdastar), Fstar0)
-
-    #smooth stellar spectrum to CK bins
-    szmod=len(wno)
-    Fstar_smooth=np.zeros(szmod)
-    dwno=wno[1:]-wno[:-1]
-    for i in range(szmod-1):
-        i=i+1
-        loc=np.where((1E4/lambdastar_hi >= wno[i]-0.5*dwno[i-1]) & (1E4/lambdastar_hi < wno[i]+0.5*dwno[i-1]))
-        Fstar_smooth[i]=np.mean(Fstar0[loc])
-
-    Fstar_smooth[0]=Fstar_smooth[1]
-    Fstar_smooth[-1]=Fstar_smooth[-2]
-    Fstar=Fstar_smooth
-    
-    #loading mie coefficients-----------------------------
-    cond_name='MgSiO3'  #feel free to swap out with anyone in ./MIE_COEFFS/....
-    file='../ABSCOEFF_CK/MIE_COEFFS/'+cond_name+'_r_0.01_300um_wl_0.3_200um_interp_STIS_WFC3_2000_30000wno.h5'
-    hf=h5py.File(file, 'r')
-    wno_M=np.array(hf['wno_M'])
-    radius=np.array(hf['radius'])
-    Mies=np.array(hf['Mies'])
-    hf.close()
-  
-    SSA=Mies[1,:,:]/Mies[0,:,:]#single scatter albedo
-    Mies[1,:,:]=SSA  #single scatter albedo
-    Mg2SiO4=Mies  #Mies = Qext, Qs, asym
-    xxsec=Mg2SiO4[0,:,:].T*np.pi*radius**2*1E-12 #scattering cross-section
-    Mg2SiO4[0,:,:]=xxsec.T
-    mies_arr=np.array([Mg2SiO4])
-
-    #cropping in wavenumber 
-    loc=np.where((wno <= wnomax) & (wno >= wnomin))[0]
-    wno=wno[loc]
-    xsecarr=xsecarr[:,:,:,loc,:]
-    mies_arr=mies_arr[:,:,:,loc]    
-    Fstar=Fstar[loc]
-
-    #loading interpolatedable chemistry grid as a function of C/O, Metallicity, T, and P (for many gases)
-    hf=h5py.File('../ABSCOEFF_CK/CHEM/chem_grid.h5', 'r')
+    hf=h5py.File(os.path.join(directory,'CHEM','chem_grid.h5'), 'r')
     logCtoO=np.array(hf['logCtoO'])  #-2.0 - 0.3
     logMet=np.array(hf['logMet']) #-2.0 - 3.0
     Tarr=np.array(hf['Tarr'])  #400 - 3400
@@ -500,29 +231,36 @@ def xsects_HST(wnomin, wnomax):
     return P,T,wno,g,wts,xsecarr,radius*1E-6,mies_arr,Fstar,logCtoO, logMet, Tarr, logParr, np.log10(gases)
 
 
-
-#*******************************************************************
-# FILE: kcoeff_interp
-#
-# DESCRIPTION: This routine interpolates the correlated-K tables
-# to the appropriate atmospheric P & T for each wavenumber and 
-# g-ordinate for each gas. It uses a standard bi-linear 
-# interpolation scheme.
-# 
-# INPUTS: 
-# logPgrid=pressure grid (log10) on which the CK coeff's are pre-computed (Npressure points)
-# logTgrid=temperature grid (log10) on which the CK coeffs are pre-computed (Ntemperature points)
-# logPatm=atmospheric pressure grid (log10) 
-# logTatm=atmospheric temperature grid (log10)
-# wnogrid=CK wavenumber grid (Nwavenumber points) (actually, this doesn't need to be passed...it does nothing here...)
-# kcoeff=massive CK coefficient array (in log10)--Ngas x Npressure x Ntemperature x Nwavenumbers x Ngordinates
-#
-# RETURNS: 
-# kcoeff_int=the interpolated-to-atmosphere CK coefficients (in log). 
-# This will be Nlayers x Nwavenumber x Ngas x Ngordiantes
-#*******************************************************************
 @jit(nopython=True)
 def kcoeff_interp(logPgrid, logTgrid, logPatm, logTatm, wnogrid, kcoeff):
+    """
+    This routine interpolates the correlated-K tables
+    to the appropriate atmospheric P & T for each wavenumber and 
+    g-ordinate for each gas. It uses a standard bi-linear 
+    interpolation scheme.
+     
+    Parameters
+    ---------- 
+    logPgrid : ndarray
+        pressure grid (log10) on which the CK coeff's are pre-computed (Npressure points)
+    logTgrid : ndarray
+        temperature grid (log10) on which the CK coeffs are pre-computed (Ntemperature points)
+    logPatm : ndarray 
+        atmospheric pressure grid (log10) 
+    logTatm : ndarray 
+        atmospheric temperature grid (log10)
+    wnogrid : ndarray 
+        CK wavenumber grid (Nwavenumber points) (actually, this doesn't need to be passed...it does nothing here...)
+    kcoeff : ndarray 
+        massive CK coefficient array (in log10)--Ngas x Npressure x Ntemperature x Nwavenumbers x Ngordinates
+    
+    Returns
+    ------- 
+    kcoeff_int 
+        the interpolated-to-atmosphere CK coefficients (in log). 
+        This will be Nlayers x Nwavenumber x Ngas x Ngordiantes
+    """
+
     Ng, NP, NT, Nwno, Nord=kcoeff.shape
     Natm=len(logTatm)
     kcoeff_int=np.zeros((Natm,Nwno,Ng,Nord))
@@ -557,31 +295,39 @@ def kcoeff_interp(logPgrid, logTgrid, logPatm, logTatm, wnogrid, kcoeff):
 
     return kcoeff_int
 
-#**************************************************************************
-# FILE:mix_two_gas_CK
-#
-# DESCRIPTION: Key function that properly mixes the CK coefficients
-# for two individual gases via the "resort-rebin" procedure
-# as descrbied in Lacis & Oinas 1991, Molliere et al. 2015 and 
-# Amundsen et al. 2017. Each pair of gases can be treated as a
-# new "hybrid" gas that can then be mixed again with another
-# gas. That is the resort-rebin magic.  This is all for a *single*
-# wavenumber bin for a single pair of gases.
-#
-# INPUTS: 
-# k1=k-coeffs for gas 1 (on Nk ordinates)
-# k2=k-coeffs for gas 2
-# VMR1=volume mixing ratio of gas 1
-# VMR2=volume mixing ratio for gas 2
-# gord=g-ordinate array for gauss. quad.
-# wts=gauss quadrature wts--same for both gases
-#
-# RETURNS:
-# kmix_bin=mixed CK coefficients for the given pair of gases
-# VMR=VMR of "mixed gas".
-#**************************************************************************
+
 @jit(nopython=True)
 def mix_two_gas_CK(k1,k2,VMR1,VMR2,gord, wts):
+    """
+    Key function that properly mixes the CK coefficients
+    for two individual gases via the "resort-rebin" procedure
+    as descrbied in Lacis & Oinas 1991, Molliere et al. 2015 and 
+    Amundsen et al. 2017. Each pair of gases can be treated as a
+    new "hybrid" gas that can then be mixed again with another
+    gas. That is the resort-rebin magic.  This is all for a *single*
+    wavenumber bin for a single pair of gases.
+
+    Parameters
+    ---------- 
+    k1 : ndarray 
+        k-coeffs for gas 1 (on Nk ordinates)
+    k2 : ndarray 
+        k-coeffs for gas 2
+    VMR1 : ndarray 
+        volume mixing ratio of gas 1
+    VMR2 : ndarray 
+        volume mixing ratio for gas 2
+    gord : ndarray
+        g-ordinate array for gauss. quad.
+    wts : ndarray 
+        gauss quadrature wts--same for both gases
+    Returns
+    -------
+    kmix_bin
+        mixed CK coefficients for the given pair of gases
+    VMR
+        volume mixing ratio of "mixed gas".
+    """
     VMR=VMR1+VMR2  #"new" VMR is sum of individual VMR's
     Nk=len(wts)
     kmix=np.zeros(Nk**2)   #Nk^2 mixed k-coeff array
@@ -608,27 +354,34 @@ def mix_two_gas_CK(k1,k2,VMR1,VMR2,gord, wts):
 
     return kmix_bin, VMR
 
-#**************************************************************************
-# FILE:mix_multi_gas-CK
-#
-# DESCRIPTION: Key function that properly mixes the CK coefficients
-# for multiple gases by treating a pair of gases at a time.
-# Each pair becomes a "hybrid" gas that can be mixed in a pair
-# with another gas, succesively. This is performed at a given
-# wavenumber and atmospheric layer.
-#
-# INPUTS:
-# CK=array of CK-coeffs for each gas: Ngas x nordinates at a given wavenumber and pressure level
-# VMR=array of mixing ratios for Ngas.
-# gord=g-ordinates
-# wts=gauss quadrature wts--same for both gases
-#
-# RETURNS:
-# kmix_bin=mixed CK coefficients for the given pair of gases
-# VMR=VMR of "mixed gas".
-#**************************************************************************
+
 @jit(nopython=True)
 def mix_multi_gas_CK(CK,VMR,gord, wts):
+    """
+    Key function that properly mixes the CK coefficients
+    for multiple gases by treating a pair of gases at a time.
+    Each pair becomes a "hybrid" gas that can be mixed in a pair
+    with another gas, succesively. This is performed at a given
+    wavenumber and atmospheric layer.
+    
+    Parameters
+    ----------
+    CK : ndarray 
+        array of CK-coeffs for each gas: Ngas x nordinates at a given wavenumber and pressure level
+    VMR : ndarray 
+        array of mixing ratios for Ngas.
+    gord : ndarray 
+        g-ordinates
+    wts : ndarray 
+        gauss quadrature wts--same for both gases
+    
+    Returns
+    -------
+    kmix_bin 
+        mixed CK coefficients for the given pair of gases
+    VMR 
+        Volume mixing ratio of "mixed gas".
+    """
     ngas=CK.shape[0]
     #begin by mixing first two gases
     kmix,VMRmix=mix_two_gas_CK(CK[0,:],CK[1,:],VMR[0],VMR[1],gord,wts)
@@ -643,28 +396,34 @@ def mix_multi_gas_CK(CK,VMR,gord, wts):
     return kmix, VMRmix
 
 
-#**************************************************************************
-# FILE:compute_tau
-#
-# DESCRIPTION: Key function that computes the layer optical depths
-# at each wavenumber,and g-ordiante. It also does the confusing mixing
-# for the single-scatter abledo and asymetry parameter by
-# appropriately weighting each by the scattering/extincition
-# optical depths.  Each g-bin is treated like a psuedo"wavenumber" bin.
-# Check out: https://spacescience.arc.nasa.gov/mars-climate-modeling-group/brief.html
-#
-# INPUTS:
-# CK=array of interpolated-to-atmosphere grid CK-coeffs for each gas (Nlayers x Nwavenumbers x Ngas x Ngordinates)
-# xsecContinuum=CK coefficients for continuum gases, here just the rayleigh scattering opacities. Each g-bin is 'flat'
-# Mies=Condensate Mie scattering extenction cross sections (e.g., Qe*pi*r^2) for each condensate, particle size, wavenumber
-# wts=gauss quadrature wts--same for both gases
-#
-# RETURNS:
-# kmix_bin=mixed CK coefficients for the given pair of gases
-# VMR=VMR of "mixed gas".
-#**************************************************************************
 @jit(nopython=True)
 def compute_tau(CK,xsecContinuum,Mies, mass_path, Fractions,Fractions_Continuum, Fractions_Cond, gord, wts):  #this is the bottleneck right here...
+    """
+    Key function that computes the layer optical depths
+    at each wavenumber,and g-ordiante. It also does the confusing mixing
+    for the single-scatter abledo and asymetry parameter by
+    appropriately weighting each by the scattering/extincition
+    optical depths.  Each g-bin is treated like a psuedo"wavenumber" bin.
+    Check out: https://spacescience.arc.nasa.gov/mars-climate-modeling-group/brief.html
+
+    Parameters
+    ----------
+    CK : ndarray 
+        array of interpolated-to-atmosphere grid CK-coeffs for each gas (Nlayers x Nwavenumbers x Ngas x Ngordinates)
+    xsecContinuum : ndarray 
+        CK coefficients for continuum gases, here just the rayleigh scattering opacities. Each g-bin is 'flat'
+    Mies : ndarray 
+        Condensate Mie scattering extenction cross sections (e.g., Qe*pi*r^2) for each condensate, particle size, wavenumber
+    wts : ndarray 
+        gauss quadrature wts--same for both gases
+
+    Returns
+    -------
+    kmix_bin 
+        mixed CK coefficients for the given pair of gases
+    VMR
+        Volume mixing ratio of "mixed gas".
+    """
     Nlay=CK.shape[0]
     Nord=CK.shape[2]
     dtau_gas=np.zeros((Nlay,Nord))
@@ -710,22 +469,25 @@ def compute_tau(CK,xsecContinuum,Mies, mass_path, Fractions,Fractions_Continuum,
 ####################################################################################
 ####################################################################################
 
-#**************************************************************************
-# FILE:blackbody.py
-#
-# DESCRIPTION: This function takes in a temperature (T) and a
-# wavelength grid (wl) and returns a blackbody flux grid.
-# This is used to compute the layer/slab "emission". All in MKS units.
-#
-# INPUTS: 
-# T=temperature of blackbody in kelvin
-# wl=wavelength grid in meters
-#
-# RETURNS:
-# B= an array of blackbody fluxes (W/m2/m/ster) at each wavelength (size Nwavelengths)
-#**************************************************************************
 @jit(nopython=True)
 def blackbody(T,wl):
+    """
+    This function takes in a temperature (T) and a
+    wavelength grid (wl) and returns a blackbody flux grid.
+    This is used to compute the layer/slab "emission". All in MKS units.
+
+    Parameters
+    ---------- 
+    T : float 
+        temperature of blackbody in kelvin
+    wl : ndarray 
+        wavelength grid in meters
+
+    Returns
+    -------
+    B : ndarray 
+        an array of blackbody fluxes (W/m2/m/ster) at each wavelength (size Nwavelengths)
+    """
     # Define constants used in calculation
     h = 6.626E-34
     c = 3.0E8
@@ -738,31 +500,28 @@ def blackbody(T,wl):
     return B
 
 
-'''
-#**************************************************************************
-
- FILE: tri_diag_solve
-
- DESCRIPTION: Tri-diagnoal matrix inversion solver. This is used
- for the two-stream radiative transver matrix inversions
- to solve for the boundary-condition coefficents on the layer
- interfaces.  
- A, B, C and D refer to: A(I)*X(I-1) + B(I)*X(I) + C(I)*X(I+1) = D(I)
-  
- INPUTS: 
- L=array size
- A : array or list
- B : array or list
- C : array or list
- C : array or list
-
- RETURNS: solution coefficients, XK
- 
-#**************************************************************************
-'''
 @jit(nopython = True)
 def tri_diag_solve(l, a, b, c, d):
-   
+    '''
+    Tri-diagnoal matrix inversion solver. This is used
+    for the two-stream radiative transver matrix inversions
+    to solve for the boundary-condition coefficents on the layer
+    interfaces.  
+    A, B, C and D refer to: A(I)*X(I-1) + B(I)*X(I) + C(I)*X(I+1) = D(I)
+
+    Parameters
+    ---------- 
+    L : int 
+        array size
+    A : array or list
+    B : array or list
+    C : array or list
+    C : array or list
+
+    Returns
+    -------
+    solution coefficients, XK
+    '''   
     AS, DS, CS, DS,XK = np.zeros(l), np.zeros(l), np.zeros(l), np.zeros(l), np.zeros(l) # copy arrays
     
     AS[-1] = a[-1]/b[-1]
@@ -777,30 +536,49 @@ def tri_diag_solve(l, a, b, c, d):
         XK[i] = DS[i] - AS[i] * XK[i-1]
     return XK
 
-'''
-#**************************************************************************
-FILE: src_func_loop
 
-DESCRIPTION: two stream source function technique described in 
-Toon, McKay, & Ackerman, 1989, JGR, 94.
-
-INPUTS
-B=planck function array (with optical depth)
-tautop=optical depth of top most layer
-Bsurf="surface" blackbody
-ubari=0.5 for hemispheric mean approximation
-nlay=number of model layers
-lam=
-...Too many to type and I'm lazy
-
-RETURNS:
-Fu=layer interface monochromatic upward flux
-Fd=layer interface monochromatic downward flux
-
-#**************************************************************************
-'''
 @jit(nopython=True)
 def src_func_loop(B,tautop,Bsurf,ubari,nlay,lam,dtau,taump,taut,ssa,hg,k1,k2,B0,B1,uarr,w):
+    '''
+    Two stream source function technique described in 
+    Toon, McKay, & Ackerman, 1989, JGR, 94.
+
+    Parameters
+    ----------
+    B : ndarray 
+        planck function array (with optical depth)
+    tautop : ndarray 
+        optical depth of top most layer
+    Bsurf : ndarray 
+        "surface" blackbody
+    ubari : float 
+        0.5 for hemispheric mean approximation
+    nlay : int 
+        number of model layers
+    lam : narray
+        Wavelength 
+    dtau : ndarray
+        optical depth per layer
+    taump : ndarray 
+    taut : ndarray 
+    ssa : ndarray 
+        single scattering albedo 
+    hg : ndarray
+        asymmetry 
+    k1 : ndarray 
+    k2 : ndarray 
+    B0 : ndarray 
+    B1 : ndarray 
+    uarr : ndarray 
+    w : ndarray
+
+    Returns
+    -------
+    Fu 
+        layer interface monochromatic upward flux
+    Fd
+        layer interface monochromatic downward flux
+    '''
     twopi=2.*np.pi
 
     Fd=np.zeros(nlay+1)
@@ -865,33 +643,37 @@ def src_func_loop(B,tautop,Bsurf,ubari,nlay,lam,dtau,taump,taut,ssa,hg,k1,k2,B0,
     return Fu, Fd
 
 
-'''
-#**************************************************************************
-FILE:toon
 
-DESCRIPTION: Monochromatic two-stream radiative transfer solver described in
-Toon, McKay, & Ackerman, 1989, JGR, 94.  Modified from
-https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py
-(described in Adamkovics et al. 2016) and the Ames Mars GCM radiative transfer 
-from https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html,
-Hollingsworth et al. This then calls the src_func_loop which recomputes the l
-ayer intensities at select cos(ZA) using the two stream solution as the intial
-source function.
-
-INPUTS:
-dtau - layer/slab optical depths
-ssa - layer/slab single scatter albedo
-hg  - layer/slab asymmetry parameter
-B - planck function at each *level* (N levels, N-1 layers/slabs)
-
-RETURNS:
-Fup=monochromatic upwards flux at each layer interface
-Fdown=monochromatic downwards flux at each layer interface
-
-#**************************************************************************
-'''
 @jit(nopython=True)
 def toon(dtau1, ssa1, hg1, B):
+    """
+    Monochromatic two-stream radiative transfer solver described in
+    Toon, McKay, & Ackerman, 1989, JGR, 94.  Modified from
+    https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py
+    (described in Adamkovics et al. 2016) and the Ames Mars GCM radiative transfer 
+    from https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html,
+    Hollingsworth et al. This then calls the src_func_loop which recomputes the l
+    ayer intensities at select cos(ZA) using the two stream solution as the intial
+    source function.
+
+    Parameters
+    ----------
+    dtau : ndarray
+        layer/slab optical depths
+    ssa : ndarray 
+        layer/slab single scatter albedo
+    hg  : ndarray 
+        layer/slab asymmetry parameter
+    B : ndarray 
+        planck function at each *level* (N levels, N-1 layers/slabs)
+
+    Returns
+    -------
+    Fup : ndarray
+        monochromatic upwards flux at each layer interface
+    Fdown : ndarray
+        monochromatic downwards flux at each layer interface
+    """
     dtau1[dtau1 < 1E-5]=1E-5
 
     #delta eddington correction for peaky scatterers
@@ -1008,37 +790,43 @@ def toon(dtau1, ssa1, hg1, B):
     
     return Fup,Fdown#, Fupraw, Fdownraw
 
-'''
-#**************************************************************************
-FILE:toon
 
-DESCRIPTION: Monochromatic two-stream radiative transfer solver described in
-Toon, McKay, & Ackerman, 1989, JGR, 94.  Modified from
-https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py
-(described in Adamkovics et al. 2016) and the Ames Mars GCM radiative transfer 
-from https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html,
-Hollingsworth et al. This then calls the src_func_loop which recomputes the l
-ayer intensities at select cos(ZA) using the two stream solution as the intial
-source function.
-
-INPUTS:
-dtau - layer/slab optical depths
-ssa - layer/slab single scatter albedo
-hg  - layer/slab asymmetry parameter
-rsurf - surface reflectivity
-MU0 - cos(theta) where theta is both the incidence an emission angle.
-F0PI - top of atmosphere incident flux * pi (the direct beam)
-BTOP - top of the atmosphere diffuse flux.
-
-RETURNS:
-Fup=monochromatic upwards reflected stellar flux at each layer interface
-Fdn=monochromatic downwards direct and diffuse stellar flux at each layer interface
-
-#**************************************************************************
-'''
 @jit(nopython=True)
 def toon_solar(dtau1, ssa1, hg1, rsurf, MU0, F0PI, BTOP):
- 
+    """
+    Monochromatic two-stream radiative transfer solver described in
+    Toon, McKay, & Ackerman, 1989, JGR, 94.  Modified from
+    https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py
+    (described in Adamkovics et al. 2016) and the Ames Mars GCM radiative transfer 
+    from https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html,
+    Hollingsworth et al. This then calls the src_func_loop which recomputes the l
+    ayer intensities at select cos(ZA) using the two stream solution as the intial
+    source function.
+
+    Parameters
+    ----------
+    dtau : ndarray 
+        layer/slab optical depths
+    ssa : ndarray 
+        layer/slab single scatter albedo
+    hg  : ndarray 
+        layer/slab asymmetry parameter
+    rsurf : ndarray 
+        surface reflectivity
+    MU0 : ndarray 
+        cos(theta) where theta is both the incidence an emission angle.
+    F0PI : ndarray 
+        top of atmosphere incident flux * pi (the direct beam)
+    BTOP : ndarray 
+        top of the atmosphere diffuse flux.
+
+    Returns
+    -------
+    Fup 
+        monochromatic upwards reflected stellar flux at each layer interface
+    Fdn
+        monochromatic downwards direct and diffuse stellar flux at each layer interface
+    """
     #delta eddington scaling
     dtau1[dtau1 < 1E-5]=1E-5
     ssa=(1.-hg1**2)*ssa1/(1.-ssa1*hg1**2)
@@ -1152,20 +940,43 @@ def toon_solar(dtau1, ssa1, hg1, rsurf, MU0, F0PI, BTOP):
 
 
 
-'''
-#**************************************************************************
-FILE:
 
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 @jit(nopython=True)
-def compute_RT(wnocrop,T,kcoeffs_interp,xsecContinuum,Mies,mass_path,Fractions,Fractions_Continuum,Fractions_Cond, gord,wts, Fstar):
+def compute_RT(wnocrop,T,kcoeffs_interp,xsecContinuum,Mies,mass_path,
+    Fractions,Fractions_Continuum,Fractions_Cond, gord,wts, Fstar):
+    """
+    Calls all requisite radiative transfer routines for emission
+
+    Parameters
+    ----------
+    wnocrop : ndarray 
+        wavenumber grid 
+    T : ndarray 
+        temperatures 
+    kcoeffs_interp : ndarray 
+        Interpolated k-coefficients 
+    xsecContinuum : ndarray 
+        cross sections for continuum opacity 
+    Mies : ndarray 
+        Mie scattering parameters 
+    mass_path : ndarray 
+    Fractions : ndarray
+        volume mixing ratios of all absorbers (excluding continuum)
+    Fractions_Continuum : ndarray
+        volume mixing ratios for continuum 
+    Fractions_Cond : ndarray
+        volume mixing ratios for condensates 
+    gord : ndarray
+        g-oordinates for k tables
+    wts : ndarray 
+        weights for k tables 
+    Fstar : ndarray
+        Flux of parent star
+
+    Returns
+    -------
+
+    """
     mu0=0.5#1./np.sqrt(3.) #what should I do with this???
     Nwno=len(wnocrop)
     Nlay=kcoeffs_interp.shape[0]
@@ -1201,38 +1012,21 @@ def compute_RT(wnocrop,T,kcoeffs_interp,xsecContinuum,Mies,mass_path,Fractions,F
     return 0.5*Fuparr+0.5*Fuparr_star, 0.5*Fdnarr+0.5*Fdnarr_star, 0.5*Fuparr,0.5*Fuparr_star , dtauarr, ssaarr, asymarr #0.5 is b/c g-ordinates go from -1 - 1 instead of 0 -1
 
 
-'''
-#**************************************************************************
-FILE:
 
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 @jit(nopython=True)
 def stellar_flux(dtau,ssa,hg, Fstar0, mu0):  #need to give this dtau and mu0
+    """ 
+    """
     rsfc=0.0
     Fup_s,Fdn_s=toon_solar(dtau, ssa, hg, rsfc,mu0,Fstar0,0.)
     return 0.5*Fup_s, 0.5*Fdn_s
 
 
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
-def rad(xsects, T, P, mmw,Ps,CldOpac,alphaH2O,alphaCH4,alphaCO,alphaCO2,alphaNH3,alphaNa,alphaK,alphaTiO,alphaVO, alphaC2H2, alphaHCN, alphaH2S,alphaFeH,fH,fe,fHm,fH2,fHe,amp,power,f_r,M,Rstar,Rp, D):
+def rad(xsects, T, P, mmw,Ps,CldOpac,alphaH2O,alphaCH4,alphaCO,alphaCO2,
+        alphaNH3,alphaNa,alphaK,alphaTiO,alphaVO, alphaC2H2, alphaHCN, 
+        alphaH2S,alphaFeH,fH,fe,fHm,fH2,fHe,amp,power,f_r,M,Rstar,Rp, D):
+    """
+    """
     t1=time.time()
     Frac_Cond=f_r
     #renaming variables, bbecause why not
@@ -1339,22 +1133,25 @@ def rad(xsects, T, P, mmw,Ps,CldOpac,alphaH2O,alphaCH4,alphaCO,alphaCO2,alphaNH3
     return wno, Fuparr, Fdnarr, dtau,ssa,asym, wts, Fstar0,Fup_therm,Fup_ref
 
 
-
-
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 def instrument_emission_non_uniform(wlgrid,wno, Fp, Fstar):
- 
+    """
+    Rebin emission spectroscopy on new wavelength grid 
+
+    Parameters
+    ----------
+    wlgrid : ndarray or int
+        new wavelength grid 
+    wno : ndarray
+        old wavenumber grid 
+    Fp : ndarray
+        Flux of planet 
+    Fstar : ndarray
+        Flux of star 
+
+    Returns
+    -------
+    fp/fs on new wavelength grid
+    """
     if isinstance(wlgrid,int):
         return Fp/Fstar
 
@@ -1388,20 +1185,33 @@ def instrument_emission_non_uniform(wlgrid,wno, Fp, Fstar):
 ####################################################################################
 ####################################################################################    
 
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 @jit(nopython=True)
-def CalcTauXsecCK(kcoeffs,Z,Pavg,Tavg, Fractions, r0,gord, wts, Fractions_Continuum, xsecContinuum):
+def CalcTauXsecCK(kcoeffs,Z,Pavg,Tavg, Fractions, r0,gord, wts, 
+                Fractions_Continuum, xsecContinuum):
+    """
+    Calculate opacity using correlated-k tables 
+    
+    Parameters
+    ----------
+    kcoeffs : ndarray 
+        correlated-k tables 
+    Z : ndarray
+        height above ref pressure
+    Pavg : ndarray
+        pressure grid 
+    Tavg : ndarray
+        temperature grid 
+    Fractions : ndarray
+        volume mixing ratios of species 
+    Fractions_Continuum : ndarray
+        volume mixing ratios of continuum species 
+    xsecContinuum : ndarray
+        cross sections for continuum
+
+    Returns
+    -------
+    transmission
+    """
     ngas=Fractions.shape[0]
     nlevels=len(Z)
     nwno=kcoeffs.shape[1]
@@ -1449,19 +1259,18 @@ def CalcTauXsecCK(kcoeffs,Z,Pavg,Tavg, Fractions, r0,gord, wts, Fractions_Contin
     return trans
 
 
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 def tran(xsects, T, P, mmw,Ps,CldOpac,alphaH2O,alphaCH4,alphaCO,alphaCO2,alphaNH3,alphaNa,alphaK,alphaTiO,alphaVO, alphaC2H2, alphaHCN, alphaH2S,alphaFeH,fH,fe,fHm,fH2,fHe,amp,power,f_r,M,Rstar,Rp):
+    """Runs all requisite routins for transmisison spectroscopy
+
+    Returns
+    -------
+    wno
+        Wavenumber grid 
+    F
+        (rp/rs)^2
+    Z
+        height above ref pressure
+    """
     t1=time.time()
 
     #renaming variables, bbecause why not
@@ -1588,24 +1397,28 @@ def tran(xsects, T, P, mmw,Ps,CldOpac,alphaH2O,alphaCH4,alphaCO,alphaCO2,alphaNH
     #print('Total in Trans', t6-t1)
 
     return wno, F, Z#, TauOne
-#**************************************************************
 
 
-
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 def instrument_tran_non_uniform(wlgrid,wno, Fp):
-    
+    """
+    Rebins transmission spectra on new wavelength grid 
+
+    Parameters
+    ----------
+    wlgrid : ndarray
+        New wavelength grid 
+    wno : ndarray
+        Old wavenumber grid 
+    Fp : ndarray
+        (rp/rs)^2
+
+    Returns
+    -------
+    Fratio_int
+        new regridded spectrum
+    Fp
+        old high res spectrum
+    """
     if isinstance(wlgrid,int):
         return Fp, Fp
 
@@ -1636,41 +1449,60 @@ def instrument_tran_non_uniform(wlgrid,wno, Fp):
 ####################################################################################
 ####################################################################################    
 
-
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 @jit(nopython=True)
 def cloud_profile(fsed,cloud_VMR, Pavg, Pbase):
+    """
+    A&M2001 eq 7., but in P-coordinates (using hydrostatic) and definition of f_sed
+
+    Parameters
+    ----------
+    fsed : float 
+        sedimentation efficiency 
+    cloud_VMR : float 
+        cloud base volume mixing ratio 
+    Pavg : ndarray
+        pressure grid 
+    Pbase : float 
+        location of cloud base
+
+    Returns
+    -------
+    Condensate mixing ratio as a function of pressure
+    """
     cond=cloud_VMR
     loc0=np.where(Pbase >= Pavg)[0][-1]
     cond_mix=np.zeros(len(Pavg))+1E-50
-    cond_mix[0:loc0+1]=cond*(Pavg[0:loc0+1]/Pavg[loc0])**fsed  #A&M2001 eq 7., but in P-coordinates (using hydrostatic) and definition of f_sed
+    cond_mix[0:loc0+1]=cond*(Pavg[0:loc0+1]/Pavg[loc0])**fsed  #
     return cond_mix
 
-'''
-#**************************************************************************
-FILE:
 
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 @jit(nopython=True)
 def particle_radius(fsed,Kzz,mmw,Tavg, Pavg,g, rho_c,mmw_c, qc,rr):
+    """
+    Computes particle radius based on A&M2011
+
+    Parameters
+    ----------
+    fsed : float 
+        sedimentation efficiency 
+    Kzz : float 
+        vertical mixing 
+    mmw : float 
+        mean molecular weight of the atmosphere
+    Tavg : float
+        temperature 
+    Pavg : float 
+        pressure 
+    g : float 
+        gravity 
+    rho_c : float 
+        density of condensate 
+    mmw_c : float 
+        molecular weight of condensate 
+    qc : float 
+        mass mixing ratio of condensate 
+    rr : float 
+    """
     dlnr=np.abs(np.log(rr[1])-np.log(rr[0]))
     kb=1.38E-23  #boltzman constant
     mu0=1.66E-27  #a.m.u.
@@ -1701,25 +1533,13 @@ def particle_radius(fsed,Kzz,mmw,Tavg, Pavg,g, rho_c,mmw_c, qc,rr):
 
 
 
-##############################   TP-PROFILE ROUTINES  ##############################
-####################################################################################
-####################################################################################    
-
-
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 def TP(Teq, Teeff, g00, kv1, kv2, kth, alpha):
-    
+    """Guillot 2010 PT profile parameterization
+
+    Returns
+    -------
+    temperature , pressure
+    """
     Teff = Teeff
     f = 1.0  # solar re-radiation factor
     A = 0.0  # planetary albedo
@@ -1748,25 +1568,10 @@ def TP(Teq, Teeff, g00, kv1, kv2, kth, alpha):
     return T, P
 
 
-
-
-##############################   DRIVER FUNCTIONS   ################################
-####################################################################################
-####################################################################################
-
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 def fx_trans(x,wlgrid,gas_scale, xsects):
+    """Transmission spectrscopy
+    """
+
     #print(x)
     #UNPACKING PARAMETER VECTOR.......
     #Unpacking Guillot 2010 TP profile params (3 params)
@@ -1876,21 +1681,9 @@ def fx_trans(x,wlgrid,gas_scale, xsects):
     return y_binned,F,wno,chemarr
 
 
-
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 def fx_trans_free(x,wlgrid,gas_scale, xsects):
-    #print(x)
+    """Transmission spectroscopy
+    """
     #UNPACKING PARAMETER VECTOR.......
     #Unpacking Guillot 2010 TP profile params (3 params)
     Tirr=x[0]
@@ -1971,21 +1764,9 @@ def fx_trans_free(x,wlgrid,gas_scale, xsects):
     return y_binned,F,wno,chemarr
 
 
-'''
-#**************************************************************************
-FILE:
-
-DESCRIPTION:
-
-INPUTS:
-
-RETURNS:
-
-#**************************************************************************
-'''
 def fx_emis(x,wlgrid,gas_scale, xsects):
-    #print(x)
-   
+    """Emission spectroscopy main function
+    """   
     #Unpacking Guillot 2010 TP profile params (3 params)
     Tirr=x[0]
     logKir=x[1]
