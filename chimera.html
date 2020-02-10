@@ -1,0 +1,1338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The Code &mdash; CHIMERA 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Introduction: HST WFC3 Chemically Consistent Transmission/Transit Tutorial" href="notebooks/CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CHIMERA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">The Tutorials</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/mrline/CHIMERA">Github</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The Code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-chimera.fm">chimera.fm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-fm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CHIMERA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>The Code</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/chimera.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="the-code">
+<h1>The Code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-chimera.fm">
+<span id="chimera-fm-module"></span><h2>chimera.fm module<a class="headerlink" href="#module-chimera.fm" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="chimera.fm.CalcTauXsecCK">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">CalcTauXsecCK</code><a class="headerlink" href="#chimera.fm.CalcTauXsecCK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate opacity using correlated-k tables</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kcoeffs</strong> (<em>ndarray</em>) – correlated-k tables</p></li>
+<li><p><strong>Z</strong> (<em>ndarray</em>) – height above ref pressure</p></li>
+<li><p><strong>Pavg</strong> (<em>ndarray</em>) – pressure grid</p></li>
+<li><p><strong>Tavg</strong> (<em>ndarray</em>) – temperature grid</p></li>
+<li><p><strong>Fractions</strong> (<em>ndarray</em>) – volume mixing ratios of species</p></li>
+<li><p><strong>Fractions_Continuum</strong> (<em>ndarray</em>) – volume mixing ratios of continuum species</p></li>
+<li><p><strong>xsecContinuum</strong> (<em>ndarray</em>) – cross sections for continuum</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>transmission</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.TP">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">TP</code><span class="sig-paren">(</span><em class="sig-param">Teq</em>, <em class="sig-param">Teeff</em>, <em class="sig-param">g00</em>, <em class="sig-param">kv1</em>, <em class="sig-param">kv2</em>, <em class="sig-param">kth</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.TP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guillot 2010 PT profile parameterization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>temperature , pressure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.blackbody">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">blackbody</code><a class="headerlink" href="#chimera.fm.blackbody" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes in a temperature (T) and a
+wavelength grid (wl) and returns a blackbody flux grid.
+This is used to compute the layer/slab “emission”. All in MKS units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<em>float</em>) – temperature of blackbody in kelvin</p></li>
+<li><p><strong>wl</strong> (<em>ndarray</em>) – wavelength grid in meters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>B</strong> – an array of blackbody fluxes (W/m2/m/ster) at each wavelength (size Nwavelengths)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.cloud_profile">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">cloud_profile</code><a class="headerlink" href="#chimera.fm.cloud_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>A&amp;M2001 eq 7., but in P-coordinates (using hydrostatic) and definition of f_sed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsed</strong> (<em>float</em>) – sedimentation efficiency</p></li>
+<li><p><strong>cloud_VMR</strong> (<em>float</em>) – cloud base volume mixing ratio</p></li>
+<li><p><strong>Pavg</strong> (<em>ndarray</em>) – pressure grid</p></li>
+<li><p><strong>Pbase</strong> (<em>float</em>) – location of cloud base</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Condensate mixing ratio as a function of pressure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.compute_RT">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">compute_RT</code><a class="headerlink" href="#chimera.fm.compute_RT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls all requisite radiative transfer routines for emission</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wnocrop</strong> (<em>ndarray</em>) – wavenumber grid</p></li>
+<li><p><strong>T</strong> (<em>ndarray</em>) – temperatures</p></li>
+<li><p><strong>kcoeffs_interp</strong> (<em>ndarray</em>) – Interpolated k-coefficients</p></li>
+<li><p><strong>xsecContinuum</strong> (<em>ndarray</em>) – cross sections for continuum opacity</p></li>
+<li><p><strong>Mies</strong> (<em>ndarray</em>) – Mie scattering parameters</p></li>
+<li><p><strong>mass_path</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>Fractions</strong> (<em>ndarray</em>) – volume mixing ratios of all absorbers (excluding continuum)</p></li>
+<li><p><strong>Fractions_Continuum</strong> (<em>ndarray</em>) – volume mixing ratios for continuum</p></li>
+<li><p><strong>Fractions_Cond</strong> (<em>ndarray</em>) – volume mixing ratios for condensates</p></li>
+<li><p><strong>gord</strong> (<em>ndarray</em>) – g-oordinates for k tables</p></li>
+<li><p><strong>wts</strong> (<em>ndarray</em>) – weights for k tables</p></li>
+<li><p><strong>Fstar</strong> (<em>ndarray</em>) – Flux of parent star</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.compute_tau">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">compute_tau</code><a class="headerlink" href="#chimera.fm.compute_tau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key function that computes the layer optical depths
+at each wavenumber,and g-ordiante. It also does the confusing mixing
+for the single-scatter abledo and asymetry parameter by
+appropriately weighting each by the scattering/extincition
+optical depths.  Each g-bin is treated like a psuedo”wavenumber” bin.
+Check out: <a class="reference external" href="https://spacescience.arc.nasa.gov/mars-climate-modeling-group/brief.html">https://spacescience.arc.nasa.gov/mars-climate-modeling-group/brief.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>CK</strong> (<em>ndarray</em>) – array of interpolated-to-atmosphere grid CK-coeffs for each gas (Nlayers x Nwavenumbers x Ngas x Ngordinates)</p></li>
+<li><p><strong>xsecContinuum</strong> (<em>ndarray</em>) – CK coefficients for continuum gases, here just the rayleigh scattering opacities. Each g-bin is ‘flat’</p></li>
+<li><p><strong>Mies</strong> (<em>ndarray</em>) – Condensate Mie scattering extenction cross sections (e.g., Qe*pi*r^2) for each condensate, particle size, wavenumber</p></li>
+<li><p><strong>wts</strong> (<em>ndarray</em>) – gauss quadrature wts–same for both gases</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>kmix_bin</em> – mixed CK coefficients for the given pair of gases</p></li>
+<li><p><em>VMR</em> – Volume mixing ratio of “mixed gas”.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.fx_emis">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">fx_emis</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">wlgrid</em>, <em class="sig-param">gas_scale</em>, <em class="sig-param">xsects</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.fx_emis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emission spectroscopy main function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.fx_trans">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">fx_trans</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">wlgrid</em>, <em class="sig-param">gas_scale</em>, <em class="sig-param">xsects</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.fx_trans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmission spectrscopy</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.fx_trans_free">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">fx_trans_free</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">wlgrid</em>, <em class="sig-param">gas_scale</em>, <em class="sig-param">xsects</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.fx_trans_free" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmission spectroscopy</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.instrument_emission_non_uniform">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">instrument_emission_non_uniform</code><span class="sig-paren">(</span><em class="sig-param">wlgrid</em>, <em class="sig-param">wno</em>, <em class="sig-param">Fp</em>, <em class="sig-param">Fstar</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.instrument_emission_non_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rebin emission spectroscopy on new wavelength grid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wlgrid</strong> (<em>ndarray</em><em> or </em><em>int</em>) – new wavelength grid</p></li>
+<li><p><strong>wno</strong> (<em>ndarray</em>) – old wavenumber grid</p></li>
+<li><p><strong>Fp</strong> (<em>ndarray</em>) – Flux of planet</p></li>
+<li><p><strong>Fstar</strong> (<em>ndarray</em>) – Flux of star</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>fp/fs on new wavelength grid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.instrument_tran_non_uniform">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">instrument_tran_non_uniform</code><span class="sig-paren">(</span><em class="sig-param">wlgrid</em>, <em class="sig-param">wno</em>, <em class="sig-param">Fp</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.instrument_tran_non_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rebins transmission spectra on new wavelength grid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wlgrid</strong> (<em>ndarray</em>) – New wavelength grid</p></li>
+<li><p><strong>wno</strong> (<em>ndarray</em>) – Old wavenumber grid</p></li>
+<li><p><strong>Fp</strong> (<em>ndarray</em>) – (rp/rs)^2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Fratio_int</em> – new regridded spectrum</p></li>
+<li><p><em>Fp</em> – old high res spectrum</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.kcoeff_interp">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">kcoeff_interp</code><a class="headerlink" href="#chimera.fm.kcoeff_interp" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine interpolates the correlated-K tables
+to the appropriate atmospheric P &amp; T for each wavenumber and
+g-ordinate for each gas. It uses a standard bi-linear
+interpolation scheme.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logPgrid</strong> (<em>ndarray</em>) – pressure grid (log10) on which the CK coeff’s are pre-computed (Npressure points)</p></li>
+<li><p><strong>logTgrid</strong> (<em>ndarray</em>) – temperature grid (log10) on which the CK coeffs are pre-computed (Ntemperature points)</p></li>
+<li><p><strong>logPatm</strong> (<em>ndarray</em>) – atmospheric pressure grid (log10)</p></li>
+<li><p><strong>logTatm</strong> (<em>ndarray</em>) – atmospheric temperature grid (log10)</p></li>
+<li><p><strong>wnogrid</strong> (<em>ndarray</em>) – CK wavenumber grid (Nwavenumber points) (actually, this doesn’t need to be passed…it does nothing here…)</p></li>
+<li><p><strong>kcoeff</strong> (<em>ndarray</em>) – massive CK coefficient array (in log10)–Ngas x Npressure x Ntemperature x Nwavenumbers x Ngordinates</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the interpolated-to-atmosphere CK coefficients (in log).
+This will be Nlayers x Nwavenumber x Ngas x Ngordiantes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>kcoeff_int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.make_stellar">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">make_stellar</code><span class="sig-paren">(</span><em class="sig-param">temp</em>, <em class="sig-param">logMH</em>, <em class="sig-param">logg</em>, <em class="sig-param">database</em>, <em class="sig-param">outfile</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.make_stellar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make stellar using pysynphot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temp</strong> (<em>float</em>) – temperature</p></li>
+<li><p><strong>logMH</strong> (<em>float</em>) – log stellar metallicity</p></li>
+<li><p><strong>logg</strong> (<em>float</em>) – stellar logg</p></li>
+<li><p><strong>database</strong> (<em>str</em>) – Stellar database to choose from</p></li>
+<li><p><strong>outfile</strong> (<em>str</em>) – stellar h5 output file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>N/A just output file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.mix_multi_gas_CK">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">mix_multi_gas_CK</code><a class="headerlink" href="#chimera.fm.mix_multi_gas_CK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key function that properly mixes the CK coefficients
+for multiple gases by treating a pair of gases at a time.
+Each pair becomes a “hybrid” gas that can be mixed in a pair
+with another gas, succesively. This is performed at a given
+wavenumber and atmospheric layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>CK</strong> (<em>ndarray</em>) – array of CK-coeffs for each gas: Ngas x nordinates at a given wavenumber and pressure level</p></li>
+<li><p><strong>VMR</strong> (<em>ndarray</em>) – array of mixing ratios for Ngas.</p></li>
+<li><p><strong>gord</strong> (<em>ndarray</em>) – g-ordinates</p></li>
+<li><p><strong>wts</strong> (<em>ndarray</em>) – gauss quadrature wts–same for both gases</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>kmix_bin</em> – mixed CK coefficients for the given pair of gases</p></li>
+<li><p><em>VMR</em> – Volume mixing ratio of “mixed gas”.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.mix_two_gas_CK">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">mix_two_gas_CK</code><a class="headerlink" href="#chimera.fm.mix_two_gas_CK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key function that properly mixes the CK coefficients
+for two individual gases via the “resort-rebin” procedure
+as descrbied in Lacis &amp; Oinas 1991, Molliere et al. 2015 and
+Amundsen et al. 2017. Each pair of gases can be treated as a
+new “hybrid” gas that can then be mixed again with another
+gas. That is the resort-rebin magic.  This is all for a <em>single</em>
+wavenumber bin for a single pair of gases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k1</strong> (<em>ndarray</em>) – k-coeffs for gas 1 (on Nk ordinates)</p></li>
+<li><p><strong>k2</strong> (<em>ndarray</em>) – k-coeffs for gas 2</p></li>
+<li><p><strong>VMR1</strong> (<em>ndarray</em>) – volume mixing ratio of gas 1</p></li>
+<li><p><strong>VMR2</strong> (<em>ndarray</em>) – volume mixing ratio for gas 2</p></li>
+<li><p><strong>gord</strong> (<em>ndarray</em>) – g-ordinate array for gauss. quad.</p></li>
+<li><p><strong>wts</strong> (<em>ndarray</em>) – gauss quadrature wts–same for both gases</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>kmix_bin</em> – mixed CK coefficients for the given pair of gases</p></li>
+<li><p><em>VMR</em> – volume mixing ratio of “mixed gas”.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.particle_radius">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">particle_radius</code><a class="headerlink" href="#chimera.fm.particle_radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes particle radius based on A&amp;M2011</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsed</strong> (<em>float</em>) – sedimentation efficiency</p></li>
+<li><p><strong>Kzz</strong> (<em>float</em>) – vertical mixing</p></li>
+<li><p><strong>mmw</strong> (<em>float</em>) – mean molecular weight of the atmosphere</p></li>
+<li><p><strong>Tavg</strong> (<em>float</em>) – temperature</p></li>
+<li><p><strong>Pavg</strong> (<em>float</em>) – pressure</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – gravity</p></li>
+<li><p><strong>rho_c</strong> (<em>float</em>) – density of condensate</p></li>
+<li><p><strong>mmw_c</strong> (<em>float</em>) – molecular weight of condensate</p></li>
+<li><p><strong>qc</strong> (<em>float</em>) – mass mixing ratio of condensate</p></li>
+<li><p><strong>rr</strong> (<em>float</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.rad">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">rad</code><span class="sig-paren">(</span><em class="sig-param">xsects</em>, <em class="sig-param">T</em>, <em class="sig-param">P</em>, <em class="sig-param">mmw</em>, <em class="sig-param">Ps</em>, <em class="sig-param">CldOpac</em>, <em class="sig-param">alphaH2O</em>, <em class="sig-param">alphaCH4</em>, <em class="sig-param">alphaCO</em>, <em class="sig-param">alphaCO2</em>, <em class="sig-param">alphaNH3</em>, <em class="sig-param">alphaNa</em>, <em class="sig-param">alphaK</em>, <em class="sig-param">alphaTiO</em>, <em class="sig-param">alphaVO</em>, <em class="sig-param">alphaC2H2</em>, <em class="sig-param">alphaHCN</em>, <em class="sig-param">alphaH2S</em>, <em class="sig-param">alphaFeH</em>, <em class="sig-param">fH</em>, <em class="sig-param">fe</em>, <em class="sig-param">fHm</em>, <em class="sig-param">fH2</em>, <em class="sig-param">fHe</em>, <em class="sig-param">amp</em>, <em class="sig-param">power</em>, <em class="sig-param">f_r</em>, <em class="sig-param">M</em>, <em class="sig-param">Rstar</em>, <em class="sig-param">Rp</em>, <em class="sig-param">D</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.rad" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.src_func_loop">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">src_func_loop</code><a class="headerlink" href="#chimera.fm.src_func_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two stream source function technique described in
+Toon, McKay, &amp; Ackerman, 1989, JGR, 94.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>B</strong> (<em>ndarray</em>) – planck function array (with optical depth)</p></li>
+<li><p><strong>tautop</strong> (<em>ndarray</em>) – optical depth of top most layer</p></li>
+<li><p><strong>Bsurf</strong> (<em>ndarray</em>) – “surface” blackbody</p></li>
+<li><p><strong>ubari</strong> (<em>float</em>) – 0.5 for hemispheric mean approximation</p></li>
+<li><p><strong>nlay</strong> (<em>int</em>) – number of model layers</p></li>
+<li><p><strong>lam</strong> (<em>narray</em>) – Wavelength</p></li>
+<li><p><strong>dtau</strong> (<em>ndarray</em>) – optical depth per layer</p></li>
+<li><p><strong>taump</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>taut</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>ssa</strong> (<em>ndarray</em>) – single scattering albedo</p></li>
+<li><p><strong>hg</strong> (<em>ndarray</em>) – asymmetry</p></li>
+<li><p><strong>k1</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>k2</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>B0</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>B1</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>uarr</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>w</strong> (<em>ndarray</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Fu</em> – layer interface monochromatic upward flux</p></li>
+<li><p><em>Fd</em> – layer interface monochromatic downward flux</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.stellar_flux">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">stellar_flux</code><a class="headerlink" href="#chimera.fm.stellar_flux" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.toon">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">toon</code><a class="headerlink" href="#chimera.fm.toon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monochromatic two-stream radiative transfer solver described in
+Toon, McKay, &amp; Ackerman, 1989, JGR, 94.  Modified from
+<a class="reference external" href="https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py">https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py</a>
+(described in Adamkovics et al. 2016) and the Ames Mars GCM radiative transfer
+from <a class="reference external" href="https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html">https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html</a>,
+Hollingsworth et al. This then calls the src_func_loop which recomputes the l
+ayer intensities at select cos(ZA) using the two stream solution as the intial
+source function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dtau</strong> (<em>ndarray</em>) – layer/slab optical depths</p></li>
+<li><p><strong>ssa</strong> (<em>ndarray</em>) – layer/slab single scatter albedo</p></li>
+<li><p><strong>hg</strong> (<em>ndarray</em>) – layer/slab asymmetry parameter</p></li>
+<li><p><strong>B</strong> (<em>ndarray</em>) – planck function at each <em>level</em> (N levels, N-1 layers/slabs)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>Fup</strong> (<em>ndarray</em>) – monochromatic upwards flux at each layer interface</p></li>
+<li><p><strong>Fdown</strong> (<em>ndarray</em>) – monochromatic downwards flux at each layer interface</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.toon_solar">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">toon_solar</code><a class="headerlink" href="#chimera.fm.toon_solar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monochromatic two-stream radiative transfer solver described in
+Toon, McKay, &amp; Ackerman, 1989, JGR, 94.  Modified from
+<a class="reference external" href="https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py">https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py</a>
+(described in Adamkovics et al. 2016) and the Ames Mars GCM radiative transfer
+from <a class="reference external" href="https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html">https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html</a>,
+Hollingsworth et al. This then calls the src_func_loop which recomputes the l
+ayer intensities at select cos(ZA) using the two stream solution as the intial
+source function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dtau</strong> (<em>ndarray</em>) – layer/slab optical depths</p></li>
+<li><p><strong>ssa</strong> (<em>ndarray</em>) – layer/slab single scatter albedo</p></li>
+<li><p><strong>hg</strong> (<em>ndarray</em>) – layer/slab asymmetry parameter</p></li>
+<li><p><strong>rsurf</strong> (<em>ndarray</em>) – surface reflectivity</p></li>
+<li><p><strong>MU0</strong> (<em>ndarray</em>) – cos(theta) where theta is both the incidence an emission angle.</p></li>
+<li><p><strong>F0PI</strong> (<em>ndarray</em>) – top of atmosphere incident flux * pi (the direct beam)</p></li>
+<li><p><strong>BTOP</strong> (<em>ndarray</em>) – top of the atmosphere diffuse flux.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Fup</em> – monochromatic upwards reflected stellar flux at each layer interface</p></li>
+<li><p><em>Fdn</em> – monochromatic downwards direct and diffuse stellar flux at each layer interface</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.tran">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">tran</code><span class="sig-paren">(</span><em class="sig-param">xsects</em>, <em class="sig-param">T</em>, <em class="sig-param">P</em>, <em class="sig-param">mmw</em>, <em class="sig-param">Ps</em>, <em class="sig-param">CldOpac</em>, <em class="sig-param">alphaH2O</em>, <em class="sig-param">alphaCH4</em>, <em class="sig-param">alphaCO</em>, <em class="sig-param">alphaCO2</em>, <em class="sig-param">alphaNH3</em>, <em class="sig-param">alphaNa</em>, <em class="sig-param">alphaK</em>, <em class="sig-param">alphaTiO</em>, <em class="sig-param">alphaVO</em>, <em class="sig-param">alphaC2H2</em>, <em class="sig-param">alphaHCN</em>, <em class="sig-param">alphaH2S</em>, <em class="sig-param">alphaFeH</em>, <em class="sig-param">fH</em>, <em class="sig-param">fe</em>, <em class="sig-param">fHm</em>, <em class="sig-param">fH2</em>, <em class="sig-param">fHe</em>, <em class="sig-param">amp</em>, <em class="sig-param">power</em>, <em class="sig-param">f_r</em>, <em class="sig-param">M</em>, <em class="sig-param">Rstar</em>, <em class="sig-param">Rp</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.tran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs all requisite routins for transmisison spectroscopy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>wno</em> – Wavenumber grid</p></li>
+<li><p><em>F</em> – (rp/rs)^2</p></li>
+<li><p><em>Z</em> – height above ref pressure</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="chimera.fm.tri_diag_solve">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">tri_diag_solve</code><a class="headerlink" href="#chimera.fm.tri_diag_solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tri-diagnoal matrix inversion solver. This is used
+for the two-stream radiative transver matrix inversions
+to solve for the boundary-condition coefficents on the layer
+interfaces.
+A, B, C and D refer to: A(I)*X(I-1) + B(I)*X(I) + C(I)*X(I+1) = D(I)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L</strong> (<em>int</em>) – array size</p></li>
+<li><p><strong>A</strong> (<em>array</em><em> or </em><em>list</em>) – </p></li>
+<li><p><strong>B</strong> (<em>array</em><em> or </em><em>list</em>) – </p></li>
+<li><p><strong>C</strong> (<em>array</em><em> or </em><em>list</em>) – </p></li>
+<li><p><strong>C</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>solution coefficients, XK</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chimera.fm.xsects">
+<code class="sig-prename descclassname">chimera.fm.</code><code class="sig-name descname">xsects</code><span class="sig-paren">(</span><em class="sig-param">wnomin</em>, <em class="sig-param">wnomax</em>, <em class="sig-param">observatory</em>, <em class="sig-param">directory</em>, <em class="sig-param">stellar_file=None</em>, <em class="sig-param">cond_name='MgSiO3'</em>, <em class="sig-param">gauss_pts='default'</em><span class="sig-paren">)</span><a class="headerlink" href="#chimera.fm.xsects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get correlated-K opacities, stellar spectrum, and chemistry</p>
+<p>Routine that loads in the correlated-K opacities
+applicable to JWST. Here we assume the data will be binned
+to an R=100 and span 50 - 28000 cm-1 (200 - 0.3 um)
+Also loads in Mie scattering properties, stellar spectrum
+for emission, and grid chemistry.  Note, to change Mie condensate,
+change the name in this routine.  Have a look in ../ABSCOEFF_CK/MIES/
+for a current list of condensates.  Feel free to also
+load in a different stellar spectrum (for emission).
+Does not matter where you get it from just so long as you can
+save it as a .h5 file in wavelength (from low to high)
+and flux, both in MKS units (m, W/m2/m)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wnomin</strong> (<em>float</em>) – minimum wavenumber for computation (min 50 for JWST, 2000 for HST)</p></li>
+<li><p><strong>wnomax</strong> (<em>float</em>) – maximum wavenumber for computation (max 28000 for JWST, 30000 for HST)</p></li>
+<li><p><strong>observatory</strong> (<em>str</em>) – Options are ‘JWST’ or ‘HST’</p></li>
+<li><p><strong>directory</strong> (<em>str</em>) – Directory path to zip file from
+<a class="reference external" href="https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0&amp;lst=">https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0&amp;lst=</a></p></li>
+<li><p><strong>stellar_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Stellar file for emission spectra</p></li>
+<li><p><strong>cond_name</strong> (<em>str</em><em> , </em><em>optional</em>) – Name of condensate to compute cloud, if using Ackerman Marley cloud scheme</p></li>
+<li><p><strong>gauss_pts</strong> (<em>str</em><em> , </em><em>optional</em>) – Number of gauss points for ck opacity tables. Default is to use
+10 for HST and 20 for JWST.
+Options are : [‘default’, ‘10’, ‘20’]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>P</em> – pressure grid for C-K-coefficient relaevant properties</p></li>
+<li><p><em>T</em> – temperature grid for C-K-coefficient relaevant properties (not the same as chemistry)</p></li>
+<li><p><em>wno</em> – wavenumber grid of xsecs (here, R=100)</p></li>
+<li><p><em>g</em> – CK gauss quad g-ordinate</p></li>
+<li><p><em>wts</em> – CK gauss quad weights</p></li>
+<li><p><em>xsecarr</em> – Pre-computed grid of CK coefficients as a function of
+Gases x Pressure x Temperature x Wavenumber x GaussQuad Points.</p></li>
+<li><p><em>radius</em> – Mie scattering/condensate relevant properties.
+Condensate particle sizes in micron (0.01 - 316 um)</p></li>
+<li><p><em>mies_arr</em> – mie properties array.  It contains the total extinction
+cross-section (first element–Qext*pi*r^2), single scatter albedo (second,
+Qs/Qext),and assymetry parameter (third) as a function of condensate (in
+this case, just one), particle radius (0.01 - 316 um), and wavenumber. These
+were generated offline with the “pymiecoated” routine using
+the indicies of refraction given in Wakeford &amp; Sing 2017.
+(Condensates x MieProperties x size bins x wavenumber)</p></li>
+<li><p><em>Fstar</em> – Stellar Flux spectrum binned to cross-section wavenumber grid</p></li>
+<li><p><em>logCtoO</em> – chemistry C/O grid in log10 (-2.0 - +0.3, -0.26 = solar)</p></li>
+<li><p><em>logMet</em> – chemistry metallicity grid in log10 (-2 - +3, 0=solar)</p></li>
+<li><p><em>Tarr</em> – Chemistry Temperature grid (400 - 3400K)</p></li>
+<li><p><em>logParr</em> – Chemistry Pressure grid (-7.0 - 2.4, log10 in bar)</p></li>
+<li><p><em>gases</em> – log of Chemistry grid of molecular gas abundances (and
+mean molecular weight) as a function of Metallicity, C/O, T, and P.
+(CtoO x logMet x Tarr x Gases x logParr). Gases: H2O  CH4  CO  CO2 NH3  N2
+HCN   H2S  PH3  C2H2 C2H6  Na    K   TiO   VO   FeH  H    H2   He   e- h-  mmw.
+This grid was generated with NASA CEA2 routine and assumes pure
+equilibrium+condensate chemistry (no rainout here).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-fm">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fm" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="fm.CalcTauXsecCK">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">CalcTauXsecCK</code><a class="headerlink" href="#fm.CalcTauXsecCK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate opacity using correlated-k tables</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kcoeffs</strong> (<em>ndarray</em>) – correlated-k tables</p></li>
+<li><p><strong>Z</strong> (<em>ndarray</em>) – height above ref pressure</p></li>
+<li><p><strong>Pavg</strong> (<em>ndarray</em>) – pressure grid</p></li>
+<li><p><strong>Tavg</strong> (<em>ndarray</em>) – temperature grid</p></li>
+<li><p><strong>Fractions</strong> (<em>ndarray</em>) – volume mixing ratios of species</p></li>
+<li><p><strong>Fractions_Continuum</strong> (<em>ndarray</em>) – volume mixing ratios of continuum species</p></li>
+<li><p><strong>xsecContinuum</strong> (<em>ndarray</em>) – cross sections for continuum</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>transmission</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.TP">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">TP</code><span class="sig-paren">(</span><em class="sig-param">Teq</em>, <em class="sig-param">Teeff</em>, <em class="sig-param">g00</em>, <em class="sig-param">kv1</em>, <em class="sig-param">kv2</em>, <em class="sig-param">kth</em>, <em class="sig-param">alpha</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.TP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guillot 2010 PT profile parameterization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>temperature , pressure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.blackbody">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">blackbody</code><a class="headerlink" href="#fm.blackbody" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes in a temperature (T) and a
+wavelength grid (wl) and returns a blackbody flux grid.
+This is used to compute the layer/slab “emission”. All in MKS units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<em>float</em>) – temperature of blackbody in kelvin</p></li>
+<li><p><strong>wl</strong> (<em>ndarray</em>) – wavelength grid in meters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>B</strong> – an array of blackbody fluxes (W/m2/m/ster) at each wavelength (size Nwavelengths)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.cloud_profile">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">cloud_profile</code><a class="headerlink" href="#fm.cloud_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>A&amp;M2001 eq 7., but in P-coordinates (using hydrostatic) and definition of f_sed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsed</strong> (<em>float</em>) – sedimentation efficiency</p></li>
+<li><p><strong>cloud_VMR</strong> (<em>float</em>) – cloud base volume mixing ratio</p></li>
+<li><p><strong>Pavg</strong> (<em>ndarray</em>) – pressure grid</p></li>
+<li><p><strong>Pbase</strong> (<em>float</em>) – location of cloud base</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Condensate mixing ratio as a function of pressure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.compute_RT">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">compute_RT</code><a class="headerlink" href="#fm.compute_RT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls all requisite radiative transfer routines for emission</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wnocrop</strong> (<em>ndarray</em>) – wavenumber grid</p></li>
+<li><p><strong>T</strong> (<em>ndarray</em>) – temperatures</p></li>
+<li><p><strong>kcoeffs_interp</strong> (<em>ndarray</em>) – Interpolated k-coefficients</p></li>
+<li><p><strong>xsecContinuum</strong> (<em>ndarray</em>) – cross sections for continuum opacity</p></li>
+<li><p><strong>Mies</strong> (<em>ndarray</em>) – Mie scattering parameters</p></li>
+<li><p><strong>mass_path</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>Fractions</strong> (<em>ndarray</em>) – volume mixing ratios of all absorbers (excluding continuum)</p></li>
+<li><p><strong>Fractions_Continuum</strong> (<em>ndarray</em>) – volume mixing ratios for continuum</p></li>
+<li><p><strong>Fractions_Cond</strong> (<em>ndarray</em>) – volume mixing ratios for condensates</p></li>
+<li><p><strong>gord</strong> (<em>ndarray</em>) – g-oordinates for k tables</p></li>
+<li><p><strong>wts</strong> (<em>ndarray</em>) – weights for k tables</p></li>
+<li><p><strong>Fstar</strong> (<em>ndarray</em>) – Flux of parent star</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.compute_tau">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">compute_tau</code><a class="headerlink" href="#fm.compute_tau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key function that computes the layer optical depths
+at each wavenumber,and g-ordiante. It also does the confusing mixing
+for the single-scatter abledo and asymetry parameter by
+appropriately weighting each by the scattering/extincition
+optical depths.  Each g-bin is treated like a psuedo”wavenumber” bin.
+Check out: <a class="reference external" href="https://spacescience.arc.nasa.gov/mars-climate-modeling-group/brief.html">https://spacescience.arc.nasa.gov/mars-climate-modeling-group/brief.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>CK</strong> (<em>ndarray</em>) – array of interpolated-to-atmosphere grid CK-coeffs for each gas (Nlayers x Nwavenumbers x Ngas x Ngordinates)</p></li>
+<li><p><strong>xsecContinuum</strong> (<em>ndarray</em>) – CK coefficients for continuum gases, here just the rayleigh scattering opacities. Each g-bin is ‘flat’</p></li>
+<li><p><strong>Mies</strong> (<em>ndarray</em>) – Condensate Mie scattering extenction cross sections (e.g., Qe*pi*r^2) for each condensate, particle size, wavenumber</p></li>
+<li><p><strong>wts</strong> (<em>ndarray</em>) – gauss quadrature wts–same for both gases</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>kmix_bin</em> – mixed CK coefficients for the given pair of gases</p></li>
+<li><p><em>VMR</em> – Volume mixing ratio of “mixed gas”.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.fx_emis">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">fx_emis</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">wlgrid</em>, <em class="sig-param">gas_scale</em>, <em class="sig-param">xsects</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.fx_emis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emission spectroscopy main function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.fx_trans">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">fx_trans</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">wlgrid</em>, <em class="sig-param">gas_scale</em>, <em class="sig-param">xsects</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.fx_trans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmission spectrscopy</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.fx_trans_free">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">fx_trans_free</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">wlgrid</em>, <em class="sig-param">gas_scale</em>, <em class="sig-param">xsects</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.fx_trans_free" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmission spectroscopy</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.instrument_emission_non_uniform">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">instrument_emission_non_uniform</code><span class="sig-paren">(</span><em class="sig-param">wlgrid</em>, <em class="sig-param">wno</em>, <em class="sig-param">Fp</em>, <em class="sig-param">Fstar</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.instrument_emission_non_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rebin emission spectroscopy on new wavelength grid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wlgrid</strong> (<em>ndarray</em><em> or </em><em>int</em>) – new wavelength grid</p></li>
+<li><p><strong>wno</strong> (<em>ndarray</em>) – old wavenumber grid</p></li>
+<li><p><strong>Fp</strong> (<em>ndarray</em>) – Flux of planet</p></li>
+<li><p><strong>Fstar</strong> (<em>ndarray</em>) – Flux of star</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>fp/fs on new wavelength grid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.instrument_tran_non_uniform">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">instrument_tran_non_uniform</code><span class="sig-paren">(</span><em class="sig-param">wlgrid</em>, <em class="sig-param">wno</em>, <em class="sig-param">Fp</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.instrument_tran_non_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rebins transmission spectra on new wavelength grid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wlgrid</strong> (<em>ndarray</em>) – New wavelength grid</p></li>
+<li><p><strong>wno</strong> (<em>ndarray</em>) – Old wavenumber grid</p></li>
+<li><p><strong>Fp</strong> (<em>ndarray</em>) – (rp/rs)^2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Fratio_int</em> – new regridded spectrum</p></li>
+<li><p><em>Fp</em> – old high res spectrum</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.kcoeff_interp">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">kcoeff_interp</code><a class="headerlink" href="#fm.kcoeff_interp" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine interpolates the correlated-K tables
+to the appropriate atmospheric P &amp; T for each wavenumber and
+g-ordinate for each gas. It uses a standard bi-linear
+interpolation scheme.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logPgrid</strong> (<em>ndarray</em>) – pressure grid (log10) on which the CK coeff’s are pre-computed (Npressure points)</p></li>
+<li><p><strong>logTgrid</strong> (<em>ndarray</em>) – temperature grid (log10) on which the CK coeffs are pre-computed (Ntemperature points)</p></li>
+<li><p><strong>logPatm</strong> (<em>ndarray</em>) – atmospheric pressure grid (log10)</p></li>
+<li><p><strong>logTatm</strong> (<em>ndarray</em>) – atmospheric temperature grid (log10)</p></li>
+<li><p><strong>wnogrid</strong> (<em>ndarray</em>) – CK wavenumber grid (Nwavenumber points) (actually, this doesn’t need to be passed…it does nothing here…)</p></li>
+<li><p><strong>kcoeff</strong> (<em>ndarray</em>) – massive CK coefficient array (in log10)–Ngas x Npressure x Ntemperature x Nwavenumbers x Ngordinates</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the interpolated-to-atmosphere CK coefficients (in log).
+This will be Nlayers x Nwavenumber x Ngas x Ngordiantes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>kcoeff_int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.make_stellar">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">make_stellar</code><span class="sig-paren">(</span><em class="sig-param">temp</em>, <em class="sig-param">logMH</em>, <em class="sig-param">logg</em>, <em class="sig-param">database</em>, <em class="sig-param">outfile</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.make_stellar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make stellar using pysynphot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temp</strong> (<em>float</em>) – temperature</p></li>
+<li><p><strong>logMH</strong> (<em>float</em>) – log stellar metallicity</p></li>
+<li><p><strong>logg</strong> (<em>float</em>) – stellar logg</p></li>
+<li><p><strong>database</strong> (<em>str</em>) – Stellar database to choose from</p></li>
+<li><p><strong>outfile</strong> (<em>str</em>) – stellar h5 output file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>N/A just output file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.mix_multi_gas_CK">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">mix_multi_gas_CK</code><a class="headerlink" href="#fm.mix_multi_gas_CK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key function that properly mixes the CK coefficients
+for multiple gases by treating a pair of gases at a time.
+Each pair becomes a “hybrid” gas that can be mixed in a pair
+with another gas, succesively. This is performed at a given
+wavenumber and atmospheric layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>CK</strong> (<em>ndarray</em>) – array of CK-coeffs for each gas: Ngas x nordinates at a given wavenumber and pressure level</p></li>
+<li><p><strong>VMR</strong> (<em>ndarray</em>) – array of mixing ratios for Ngas.</p></li>
+<li><p><strong>gord</strong> (<em>ndarray</em>) – g-ordinates</p></li>
+<li><p><strong>wts</strong> (<em>ndarray</em>) – gauss quadrature wts–same for both gases</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>kmix_bin</em> – mixed CK coefficients for the given pair of gases</p></li>
+<li><p><em>VMR</em> – Volume mixing ratio of “mixed gas”.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.mix_two_gas_CK">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">mix_two_gas_CK</code><a class="headerlink" href="#fm.mix_two_gas_CK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key function that properly mixes the CK coefficients
+for two individual gases via the “resort-rebin” procedure
+as descrbied in Lacis &amp; Oinas 1991, Molliere et al. 2015 and
+Amundsen et al. 2017. Each pair of gases can be treated as a
+new “hybrid” gas that can then be mixed again with another
+gas. That is the resort-rebin magic.  This is all for a <em>single</em>
+wavenumber bin for a single pair of gases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k1</strong> (<em>ndarray</em>) – k-coeffs for gas 1 (on Nk ordinates)</p></li>
+<li><p><strong>k2</strong> (<em>ndarray</em>) – k-coeffs for gas 2</p></li>
+<li><p><strong>VMR1</strong> (<em>ndarray</em>) – volume mixing ratio of gas 1</p></li>
+<li><p><strong>VMR2</strong> (<em>ndarray</em>) – volume mixing ratio for gas 2</p></li>
+<li><p><strong>gord</strong> (<em>ndarray</em>) – g-ordinate array for gauss. quad.</p></li>
+<li><p><strong>wts</strong> (<em>ndarray</em>) – gauss quadrature wts–same for both gases</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>kmix_bin</em> – mixed CK coefficients for the given pair of gases</p></li>
+<li><p><em>VMR</em> – volume mixing ratio of “mixed gas”.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.particle_radius">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">particle_radius</code><a class="headerlink" href="#fm.particle_radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes particle radius based on A&amp;M2011</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsed</strong> (<em>float</em>) – sedimentation efficiency</p></li>
+<li><p><strong>Kzz</strong> (<em>float</em>) – vertical mixing</p></li>
+<li><p><strong>mmw</strong> (<em>float</em>) – mean molecular weight of the atmosphere</p></li>
+<li><p><strong>Tavg</strong> (<em>float</em>) – temperature</p></li>
+<li><p><strong>Pavg</strong> (<em>float</em>) – pressure</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – gravity</p></li>
+<li><p><strong>rho_c</strong> (<em>float</em>) – density of condensate</p></li>
+<li><p><strong>mmw_c</strong> (<em>float</em>) – molecular weight of condensate</p></li>
+<li><p><strong>qc</strong> (<em>float</em>) – mass mixing ratio of condensate</p></li>
+<li><p><strong>rr</strong> (<em>float</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.rad">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">rad</code><span class="sig-paren">(</span><em class="sig-param">xsects</em>, <em class="sig-param">T</em>, <em class="sig-param">P</em>, <em class="sig-param">mmw</em>, <em class="sig-param">Ps</em>, <em class="sig-param">CldOpac</em>, <em class="sig-param">alphaH2O</em>, <em class="sig-param">alphaCH4</em>, <em class="sig-param">alphaCO</em>, <em class="sig-param">alphaCO2</em>, <em class="sig-param">alphaNH3</em>, <em class="sig-param">alphaNa</em>, <em class="sig-param">alphaK</em>, <em class="sig-param">alphaTiO</em>, <em class="sig-param">alphaVO</em>, <em class="sig-param">alphaC2H2</em>, <em class="sig-param">alphaHCN</em>, <em class="sig-param">alphaH2S</em>, <em class="sig-param">alphaFeH</em>, <em class="sig-param">fH</em>, <em class="sig-param">fe</em>, <em class="sig-param">fHm</em>, <em class="sig-param">fH2</em>, <em class="sig-param">fHe</em>, <em class="sig-param">amp</em>, <em class="sig-param">power</em>, <em class="sig-param">f_r</em>, <em class="sig-param">M</em>, <em class="sig-param">Rstar</em>, <em class="sig-param">Rp</em>, <em class="sig-param">D</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.rad" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fm.src_func_loop">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">src_func_loop</code><a class="headerlink" href="#fm.src_func_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two stream source function technique described in
+Toon, McKay, &amp; Ackerman, 1989, JGR, 94.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>B</strong> (<em>ndarray</em>) – planck function array (with optical depth)</p></li>
+<li><p><strong>tautop</strong> (<em>ndarray</em>) – optical depth of top most layer</p></li>
+<li><p><strong>Bsurf</strong> (<em>ndarray</em>) – “surface” blackbody</p></li>
+<li><p><strong>ubari</strong> (<em>float</em>) – 0.5 for hemispheric mean approximation</p></li>
+<li><p><strong>nlay</strong> (<em>int</em>) – number of model layers</p></li>
+<li><p><strong>lam</strong> (<em>narray</em>) – Wavelength</p></li>
+<li><p><strong>dtau</strong> (<em>ndarray</em>) – optical depth per layer</p></li>
+<li><p><strong>taump</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>taut</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>ssa</strong> (<em>ndarray</em>) – single scattering albedo</p></li>
+<li><p><strong>hg</strong> (<em>ndarray</em>) – asymmetry</p></li>
+<li><p><strong>k1</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>k2</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>B0</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>B1</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>uarr</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>w</strong> (<em>ndarray</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Fu</em> – layer interface monochromatic upward flux</p></li>
+<li><p><em>Fd</em> – layer interface monochromatic downward flux</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.stellar_flux">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">stellar_flux</code><a class="headerlink" href="#fm.stellar_flux" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fm.toon">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">toon</code><a class="headerlink" href="#fm.toon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monochromatic two-stream radiative transfer solver described in
+Toon, McKay, &amp; Ackerman, 1989, JGR, 94.  Modified from
+<a class="reference external" href="https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py">https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py</a>
+(described in Adamkovics et al. 2016) and the Ames Mars GCM radiative transfer
+from <a class="reference external" href="https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html">https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html</a>,
+Hollingsworth et al. This then calls the src_func_loop which recomputes the l
+ayer intensities at select cos(ZA) using the two stream solution as the intial
+source function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dtau</strong> (<em>ndarray</em>) – layer/slab optical depths</p></li>
+<li><p><strong>ssa</strong> (<em>ndarray</em>) – layer/slab single scatter albedo</p></li>
+<li><p><strong>hg</strong> (<em>ndarray</em>) – layer/slab asymmetry parameter</p></li>
+<li><p><strong>B</strong> (<em>ndarray</em>) – planck function at each <em>level</em> (N levels, N-1 layers/slabs)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>Fup</strong> (<em>ndarray</em>) – monochromatic upwards flux at each layer interface</p></li>
+<li><p><strong>Fdown</strong> (<em>ndarray</em>) – monochromatic downwards flux at each layer interface</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.toon_solar">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">toon_solar</code><a class="headerlink" href="#fm.toon_solar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monochromatic two-stream radiative transfer solver described in
+Toon, McKay, &amp; Ackerman, 1989, JGR, 94.  Modified from
+<a class="reference external" href="https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py">https://github.com/adamkovics/atmosphere/blob/master/atmosphere/rt/twostream.py</a>
+(described in Adamkovics et al. 2016) and the Ames Mars GCM radiative transfer
+from <a class="reference external" href="https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html">https://spacescience.arc.nasa.gov/mars-climate-modeling-group/models.html</a>,
+Hollingsworth et al. This then calls the src_func_loop which recomputes the l
+ayer intensities at select cos(ZA) using the two stream solution as the intial
+source function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dtau</strong> (<em>ndarray</em>) – layer/slab optical depths</p></li>
+<li><p><strong>ssa</strong> (<em>ndarray</em>) – layer/slab single scatter albedo</p></li>
+<li><p><strong>hg</strong> (<em>ndarray</em>) – layer/slab asymmetry parameter</p></li>
+<li><p><strong>rsurf</strong> (<em>ndarray</em>) – surface reflectivity</p></li>
+<li><p><strong>MU0</strong> (<em>ndarray</em>) – cos(theta) where theta is both the incidence an emission angle.</p></li>
+<li><p><strong>F0PI</strong> (<em>ndarray</em>) – top of atmosphere incident flux * pi (the direct beam)</p></li>
+<li><p><strong>BTOP</strong> (<em>ndarray</em>) – top of the atmosphere diffuse flux.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Fup</em> – monochromatic upwards reflected stellar flux at each layer interface</p></li>
+<li><p><em>Fdn</em> – monochromatic downwards direct and diffuse stellar flux at each layer interface</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.tran">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">tran</code><span class="sig-paren">(</span><em class="sig-param">xsects</em>, <em class="sig-param">T</em>, <em class="sig-param">P</em>, <em class="sig-param">mmw</em>, <em class="sig-param">Ps</em>, <em class="sig-param">CldOpac</em>, <em class="sig-param">alphaH2O</em>, <em class="sig-param">alphaCH4</em>, <em class="sig-param">alphaCO</em>, <em class="sig-param">alphaCO2</em>, <em class="sig-param">alphaNH3</em>, <em class="sig-param">alphaNa</em>, <em class="sig-param">alphaK</em>, <em class="sig-param">alphaTiO</em>, <em class="sig-param">alphaVO</em>, <em class="sig-param">alphaC2H2</em>, <em class="sig-param">alphaHCN</em>, <em class="sig-param">alphaH2S</em>, <em class="sig-param">alphaFeH</em>, <em class="sig-param">fH</em>, <em class="sig-param">fe</em>, <em class="sig-param">fHm</em>, <em class="sig-param">fH2</em>, <em class="sig-param">fHe</em>, <em class="sig-param">amp</em>, <em class="sig-param">power</em>, <em class="sig-param">f_r</em>, <em class="sig-param">M</em>, <em class="sig-param">Rstar</em>, <em class="sig-param">Rp</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.tran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs all requisite routins for transmisison spectroscopy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>wno</em> – Wavenumber grid</p></li>
+<li><p><em>F</em> – (rp/rs)^2</p></li>
+<li><p><em>Z</em> – height above ref pressure</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fm.tri_diag_solve">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">tri_diag_solve</code><a class="headerlink" href="#fm.tri_diag_solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tri-diagnoal matrix inversion solver. This is used
+for the two-stream radiative transver matrix inversions
+to solve for the boundary-condition coefficents on the layer
+interfaces.
+A, B, C and D refer to: A(I)*X(I-1) + B(I)*X(I) + C(I)*X(I+1) = D(I)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L</strong> (<em>int</em>) – array size</p></li>
+<li><p><strong>A</strong> (<em>array</em><em> or </em><em>list</em>) – </p></li>
+<li><p><strong>B</strong> (<em>array</em><em> or </em><em>list</em>) – </p></li>
+<li><p><strong>C</strong> (<em>array</em><em> or </em><em>list</em>) – </p></li>
+<li><p><strong>C</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>solution coefficients, XK</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fm.xsects">
+<code class="sig-prename descclassname">fm.</code><code class="sig-name descname">xsects</code><span class="sig-paren">(</span><em class="sig-param">wnomin</em>, <em class="sig-param">wnomax</em>, <em class="sig-param">observatory</em>, <em class="sig-param">directory</em>, <em class="sig-param">stellar_file=None</em>, <em class="sig-param">cond_name='MgSiO3'</em>, <em class="sig-param">gauss_pts='default'</em><span class="sig-paren">)</span><a class="headerlink" href="#fm.xsects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get correlated-K opacities, stellar spectrum, and chemistry</p>
+<p>Routine that loads in the correlated-K opacities
+applicable to JWST. Here we assume the data will be binned
+to an R=100 and span 50 - 28000 cm-1 (200 - 0.3 um)
+Also loads in Mie scattering properties, stellar spectrum
+for emission, and grid chemistry.  Note, to change Mie condensate,
+change the name in this routine.  Have a look in ../ABSCOEFF_CK/MIES/
+for a current list of condensates.  Feel free to also
+load in a different stellar spectrum (for emission).
+Does not matter where you get it from just so long as you can
+save it as a .h5 file in wavelength (from low to high)
+and flux, both in MKS units (m, W/m2/m)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wnomin</strong> (<em>float</em>) – minimum wavenumber for computation (min 50 for JWST, 2000 for HST)</p></li>
+<li><p><strong>wnomax</strong> (<em>float</em>) – maximum wavenumber for computation (max 28000 for JWST, 30000 for HST)</p></li>
+<li><p><strong>observatory</strong> (<em>str</em>) – Options are ‘JWST’ or ‘HST’</p></li>
+<li><p><strong>directory</strong> (<em>str</em>) – Directory path to zip file from
+<a class="reference external" href="https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0&amp;lst=">https://www.dropbox.com/sh/o4p3f8ukpfl0wg6/AADBeGuOfFLo38MGWZ8oFDX2a?dl=0&amp;lst=</a></p></li>
+<li><p><strong>stellar_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Stellar file for emission spectra</p></li>
+<li><p><strong>cond_name</strong> (<em>str</em><em> , </em><em>optional</em>) – Name of condensate to compute cloud, if using Ackerman Marley cloud scheme</p></li>
+<li><p><strong>gauss_pts</strong> (<em>str</em><em> , </em><em>optional</em>) – Number of gauss points for ck opacity tables. Default is to use
+10 for HST and 20 for JWST.
+Options are : [‘default’, ‘10’, ‘20’]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>P</em> – pressure grid for C-K-coefficient relaevant properties</p></li>
+<li><p><em>T</em> – temperature grid for C-K-coefficient relaevant properties (not the same as chemistry)</p></li>
+<li><p><em>wno</em> – wavenumber grid of xsecs (here, R=100)</p></li>
+<li><p><em>g</em> – CK gauss quad g-ordinate</p></li>
+<li><p><em>wts</em> – CK gauss quad weights</p></li>
+<li><p><em>xsecarr</em> – Pre-computed grid of CK coefficients as a function of
+Gases x Pressure x Temperature x Wavenumber x GaussQuad Points.</p></li>
+<li><p><em>radius</em> – Mie scattering/condensate relevant properties.
+Condensate particle sizes in micron (0.01 - 316 um)</p></li>
+<li><p><em>mies_arr</em> – mie properties array.  It contains the total extinction
+cross-section (first element–Qext*pi*r^2), single scatter albedo (second,
+Qs/Qext),and assymetry parameter (third) as a function of condensate (in
+this case, just one), particle radius (0.01 - 316 um), and wavenumber. These
+were generated offline with the “pymiecoated” routine using
+the indicies of refraction given in Wakeford &amp; Sing 2017.
+(Condensates x MieProperties x size bins x wavenumber)</p></li>
+<li><p><em>Fstar</em> – Stellar Flux spectrum binned to cross-section wavenumber grid</p></li>
+<li><p><em>logCtoO</em> – chemistry C/O grid in log10 (-2.0 - +0.3, -0.26 = solar)</p></li>
+<li><p><em>logMet</em> – chemistry metallicity grid in log10 (-2 - +3, 0=solar)</p></li>
+<li><p><em>Tarr</em> – Chemistry Temperature grid (400 - 3400K)</p></li>
+<li><p><em>logParr</em> – Chemistry Pressure grid (-7.0 - 2.4, log10 in bar)</p></li>
+<li><p><em>gases</em> – log of Chemistry grid of molecular gas abundances (and
+mean molecular weight) as a function of Metallicity, C/O, T, and P.
+(CtoO x logMet x Tarr x Gases x logParr). Gases: H2O  CH4  CO  CO2 NH3  N2
+HCN   H2S  PH3  C2H2 C2H6  Na    K   TiO   VO   FeH  H    H2   He   e- h-  mmw.
+This grid was generated with NASA CEA2 routine and assumes pure
+equilibrium+condensate chemistry (no rainout here).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="notebooks/CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.html" class="btn btn-neutral float-left" title="Introduction: HST WFC3 Chemically Consistent Transmission/Transit Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Mike R. Line
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

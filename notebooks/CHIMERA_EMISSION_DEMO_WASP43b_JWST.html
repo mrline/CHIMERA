@@ -1,0 +1,862 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>JWST Secondary Eclipse/Emission Tutorial &mdash; CHIMERA 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HST WFC3 Secondary Eclipse/Emission Tutorial" href="CHIMERA_EMISSION_DEMO_WASP43b_WFC3.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CHIMERA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">The Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../tutorials.html#basics">Basics</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Emission Spectroscopy with JWST Tutorial</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Import-Routines">Import Routines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Create-Stellar-File-(For-Emission)">Create Stellar File (For Emission)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Load-Opacities">Load Opacities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Setup-Atmospheric-Parameters">Setup Atmospheric Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Generate-Model-Atmosphere-&amp;-Secondary-Eclipse-Spectrum">Generate Model Atmosphere &amp; Secondary Eclipse Spectrum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Generate-Simulated-Data">Generate Simulated Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Plot-Model-Atmosphere">Plot Model Atmosphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Plot-Secondary-Eclipse-Spectrum-Model-and-Data">Plot Secondary Eclipse Spectrum Model and Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Play-around-with-Secondary-Eclipse-Spectrum">Play around with Secondary Eclipse Spectrum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Doing-the-Retrieval-“off-line”-with-PyMultiNest">Doing the Retrieval “off line” with PyMultiNest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="CHIMERA_EMISSION_DEMO_WASP43b_WFC3.html">HST WFC3 Secondary Eclipse/Emission Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CHIMERA_EMISSION_DEMO_WASP43b_WFC3.html#Plot-Secondary-Eclipse-Spectrum-Model-and-Data">Plot Secondary Eclipse Spectrum Model and Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CHIMERA_TRANSMISSION_DEMO_WASP43b_JWST.html">Transmission Spectroscopy with JWST Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3_FREE.html">Transmission Spectroscopy Free Chem with HST Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CHIMERA_TRANSMISSION_DEMO_WASP43b_WFC3.html">Transmission Spectroscopy ith HST Tutorial</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/mrline/CHIMERA">Github</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chimera.html">The Code</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CHIMERA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
+        
+      <li>JWST Secondary Eclipse/Emission Tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/CHIMERA_EMISSION_DEMO_WASP43b_JWST.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference external" href="https://github.com/mrline/CHIMERA/tree/master/docs/notebooks/CHIMERA_EMISSION_DEMO_WASP43b_JWST.ipynb">Download full notebook here</a></p>
+</div>
+<div class="section" id="JWST-Secondary-Eclipse/Emission-Tutorial">
+<h1>JWST Secondary Eclipse/Emission Tutorial<a class="headerlink" href="#JWST-Secondary-Eclipse/Emission-Tutorial" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to the simulated JWST emission/secondary-eclipse spectrum model/retrieval tutorial!</p>
+<p>For this particular setup, the atmosphere is parameterized within the “chemically-consistent” framework as described in Kreidberg et al. 2015, but for emission. The atmospheric composition is parameterized with only a metalicity and carbon-to-oxygen ratio assumed to be in thermochemical equilibrium along the temperature-pressure profile. Originally this code would compute the gas and condensate phase mixing ratios by calling the NASA CEA routine. However, in order to remove fortran dependencies,
+a finely sampled pre-computed, interpolateable chemistry grid was instead produced with CEA as a function of temperature (T from 400K - 3400K in 100K increments), pressure (<span class="math notranslate nohighlight">\(log_{10}(P)\)</span> from -7.0 (0.1:math:<cite>mu</cite>bar) - 2.4 (316 bar) in 0.1 increments), metallicity (<span class="math notranslate nohighlight">\([M/H]\)</span> from -2.0 (0.01:math:<cite>times</cite>) to 3.0 (1000:math:<cite>times</cite>)), and C/O (<span class="math notranslate nohighlight">\(log_{10}(C/O)\)</span> from -2.0 (0.01) to 0.3 (2) awkwardly spaced to better sample the transition about C/O=1). All elemental abundances are
+scaled with respect to the Lodders 2009 solar abundance pattern. A pseudo-hack rainout approximation is made to the gas phase abundances of TiO, VO, Na, K, and FeH. In this hack, these species are set to 0 abundance at levels above where they first fall below some critical value (<span class="math notranslate nohighlight">\(10^{-8}\)</span>). This is to mimic the loss of these species from the gas phase into the condensate phase. In no case are we accounting for the loss of elemental abundances.</p>
+<p>The 3-parameter temperature profile parameterization utilizes the Guillot 2010/Parmentier et al. 2014 analytic formulism (see Line et al. 2013a for implementation details).</p>
+<p>This “emission” routine accounts for both stellar reflected and planetary thermal emission treated within the Toon et al. 1989 two stream + two stream source function technique (toonpy.py and toonpy_solar.py). It accounts for multiple scattering given basic cloud optical properties (extinction efficiencies, single scatter albedo, and asymmetry parameter). Instead of using line-by-line, or “sampled” cross-sections, this implementation uses the “correlated-K” method (see Lacis &amp; Oinas 1990, or
+more recently Amundsen et al. 2017). Specifically, in multi-gas, multiple scattering atmospheres in “emission”, the “resort-rebin” gas-mixing procedure has to be implemented (Molliere et al. 2015, Amundsen et al. 2017). Correlated-K is advantageous as it preserves the wavelength bin “integrated” precision as line-by-line but with far less demanding computation. We include as correlated-K line opacites H2O, CH4, CO, CO2, NH3, HCN, H2S, C2H2, Na, K, TiO, VO, FeH and as continuum gas opacities
+H2-H2, H2-He CIA, and the H- bound free and free free (e.g., Arcangeli et al. 2018). See the “opacity” tutorial for more details on correlated-K.</p>
+<p>To handle the effects of disequilibrium chemistry due to vertical mixing, we apply the “quench-pressure” approximation. We include a quench pressure parameter for the carbon-system and one for the nitrogen system (as in Morley et al. 2017 for GJ436b, and Kreidberg et al. 2018 for WASP-107b). The carbon quench pressure fixes the H2O, CO, and CH4 abundances above the quench pressure level to their abundances at the quench pressure level. Similarly, the nitrogen quench pressure fixes the N2, NH3,
+and HCN abundances above the quench pressure to their values at the quench pressure level. This is indeed a kludge, and a better implementation would be to use the timescale/eddy mixing prescription described in Zahnle &amp; Marley 2015. Regardless, any non-full kinetics approach is a kludge anyway (not to mention the 1D nature of the problem…).</p>
+<p>There are two different cloud prescriptions built in. The first is the Ackerman &amp; Marley 2001 “eddy-sed” approach that self-consistently computes the vertical particle size distribution given a sedimentation factor, <span class="math notranslate nohighlight">\(f_{sed}\)</span> and an eddy mixing factor (K:math:<cite>_{zz}</cite>) from some cloud base pressure and intrinsic condensate mixing ratio. The classic “power-law haze” and “grey cloud” prescripton is also included.</p>
+<p>Finally, if one doesn’t like the “chemically-consistent” concept, they can use the “gas_scale” array to switch off or scale the abundances each opacity source.</p>
+<p>This specific notebook goes through the steps to generate the forward model, and illustrate how to actually perform the retrieval. However, the retrievals are bust run on a compute cluster or a node with more than 4 cores. We will create a simulated JWST dataset using WASP-43b planet/star parameters, assuming the data will be binned to an R=100 (resolution of the correlated-K coefficients).</p>
+<p>Software Requirements: This runs in the python 3 anaconda environment. It is also crucial that anaconda numba is installed as many of the routines are optimized using numba’s “&#64;jit” decorator (<a class="reference external" href="http://numba.pydata.org/">http://numba.pydata.org/</a>).</p>
+<div class="section" id="Import-Routines">
+<h2>Import Routines<a class="headerlink" href="#Import-Routines" title="Permalink to this headline">¶</a></h2>
+<p>This first segment loads in the routines from fm.py and the correlated-K coefficients. The JWST xsecs (really, correlated-K) are at an R=100 &lt; 20 microns (&gt; 500 cm-1) and R=50 &gt; 20 microns (&lt;500 cm-1). Note that the “core” set of routines are all in fm.py. The thermal emission radiative transfer solver is toonpy.py and the incident stellar flux solver is toonpy_solar.py If you want to know more about what is in the sausage, look into these routines.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#import all of the functions in fm, namely, the CK-coefficients (may take a minute)</span>
+<span class="kn">from</span> <span class="nn">chimera</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="o">%</span><span class="k">matplotlib</span> notebook
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-Stellar-File-(For-Emission)">
+<h2>Create Stellar File (For Emission)<a class="headerlink" href="#Create-Stellar-File-(For-Emission)" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">stellar_file</span> <span class="o">=</span> <span class="s1">&#39;sum_star.h5&#39;</span>
+<span class="n">temp</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">logmh</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">logg</span> <span class="o">=</span> <span class="mf">4.0</span>
+<span class="n">stellar_db</span> <span class="o">=</span> <span class="s1">&#39;phoenix&#39;</span>
+<span class="n">make_stellar</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span><span class="n">logmh</span><span class="p">,</span><span class="n">logg</span><span class="p">,</span><span class="n">stellar_db</span><span class="p">,</span><span class="n">stellar_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Load-Opacities">
+<h2>Load Opacities<a class="headerlink" href="#Load-Opacities" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#preload CK-coeffs--a giant array/variable to be passed--inputs are lower wavenumber, upper wavenumber</span>
+<span class="c1">#between 50 and 30000 cm-1 with R = 100 &gt; 500 cm-1 (&lt;20 um) and R=50 &lt;500 cm-1 (&gt;20 um)</span>
+<span class="c1">#to convert between microns and wavenumbers-- wavelength [um] = 10,000/wavenumber [cm-1]</span>
+<span class="c1">#make sure xsec wavenumber/wavelength range is *larger* than data wavelength range</span>
+<span class="n">wnomin</span> <span class="o">=</span> <span class="mi">750</span>
+<span class="n">wnomax</span> <span class="o">=</span> <span class="mi">15000</span>
+<span class="n">observatory</span><span class="o">=</span><span class="s1">&#39;JWST&#39;</span>
+<span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span><span class="s1">&#39;..&#39;</span><span class="p">,</span><span class="s1">&#39;..&#39;</span><span class="p">,</span><span class="s1">&#39;ABSCOEFF_CK&#39;</span><span class="p">)</span>
+<span class="n">xsecs</span><span class="o">=</span><span class="n">xsects</span><span class="p">(</span><span class="n">wnomin</span><span class="p">,</span> <span class="n">wnomax</span><span class="p">,</span> <span class="n">observatory</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span><span class="n">stellar_file</span><span class="o">=</span><span class="n">stellar_file</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Setup-Atmospheric-Parameters">
+<h2>Setup Atmospheric Parameters<a class="headerlink" href="#Setup-Atmospheric-Parameters" title="Permalink to this headline">¶</a></h2>
+<p>This segement defines the various atmospheric quantities and assignes them values for the generation of a simple emission spectrum. A description of each parameter along with a reasonable range of values is given as a comment following the assigned value. All of the parameters are then put into the parameter “state-vector” array, x.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#setup &quot;input&quot; parameters. We are defining our 1D atmosphere with these</span>
+<span class="c1">#the parameters</span>
+<span class="c1">#planet/star system params--xRp is the &quot;Rp&quot; free parameter, M right now is fixed, but could be free param</span>
+<span class="n">Rp</span><span class="o">=</span><span class="mf">1.036</span>  <span class="c1">#Planet radius in Jupiter Radii--this will be forced to be 10 bar radius--arbitrary (scaling to this is free par)</span>
+<span class="n">Rstar</span><span class="o">=</span><span class="mf">0.667</span> <span class="c1"># #Stellar Radius in Solar Radii</span>
+<span class="n">M</span> <span class="o">=</span><span class="mf">2.034</span>  <span class="c1">#Mass in Jupiter Masses</span>
+<span class="n">D</span><span class="o">=</span><span class="mf">0.01526</span>   <span class="c1">#semimajor axis in AU--for reflected light component</span>
+
+<span class="c1">#TP profile params (3--Guillot 2010, Parmentier &amp; Guillot 2013--see Line et al. 2013a for implementation)</span>
+<span class="n">Tirr</span><span class="o">=</span><span class="mi">1400</span>     <span class="c1">#Irradiation temperature as defined in Guillot 2010</span>
+<span class="n">logKir</span><span class="o">=-</span><span class="mf">1.5</span>  <span class="c1">#TP profile IR opacity (log there-of) controlls the &quot;vertical&quot; location of the gradient</span>
+<span class="n">logg1</span><span class="o">=-</span><span class="mf">0.7</span>     <span class="c1">#single channel Vis/IR (log) opacity. Controls the delta T between deep T and TOA T</span>
+<span class="n">Tint</span><span class="o">=</span><span class="mi">200</span> <span class="c1">#interior temperature...this would be the &quot;effective temperature&quot; if object were not irradiated</span>
+
+<span class="c1">#Composition parameters---assumes &quot;chemically consistent model&quot; described in Kreidberg et al. 2015</span>
+<span class="n">logMet</span><span class="o">=</span><span class="mf">0.0</span>  <span class="c1">#.   #Metallicity relative to solar log--solar is 0, 10x=1, 0.1x = -1: valid range is -1.5 - 3.0</span>
+<span class="n">logCtoO</span><span class="o">=-</span><span class="mf">0.26</span>   <span class="c1">#log C-to-O ratio: log solar is -0.26: valid range is -1.0 - 0.3</span>
+<span class="n">logPQCarbon</span><span class="o">=-</span><span class="mf">5.5</span>  <span class="c1">#CH4, CO, H2O Qunech pressure--forces CH4, CO, and H2O to constant value at quench pressure value: valid range -6.0 - 1.5</span>
+<span class="n">logPQNitrogen</span><span class="o">=-</span><span class="mf">5.5</span>  <span class="c1">#N2, NH3 Quench pressure--forces N2 and NH3 to &quot;&quot;</span>
+
+<span class="c1">#Ackerman &amp; Marley 2001 Cloud parameters--physically motivated with Mie particles</span>
+<span class="n">logKzz</span><span class="o">=</span><span class="mi">7</span> <span class="c1">#log Kzz (cm2/s)--valid range: 2 - 11 -- higher values make larger particles</span>
+<span class="n">fsed</span><span class="o">=</span><span class="mf">2.0</span> <span class="c1">#sediminetation efficiency--valid range: 0.5 - 5--lower values make &quot;puffier&quot; more extended cloud</span>
+<span class="n">logPbase</span><span class="o">=-</span><span class="mf">1.0</span>  <span class="c1">#cloud base pressure--valid range: -6.0 - 1.5</span>
+<span class="n">logCldVMR</span><span class="o">=-</span><span class="mf">5.5</span> <span class="c1">#cloud condensate base mixing ratio (e.g, see Fortney 2005)--valid range: -15 - -2.0</span>
+
+<span class="c1">#simple &#39;grey+rayleigh&#39; parameters just in case you don&#39;t want to use a physically motivated cloud</span>
+<span class="c1">#(most are just made up anyway since we don&#39;t really understand all of the micro-physics.....)</span>
+<span class="n">logKcld</span> <span class="o">=</span> <span class="o">-</span><span class="mi">40</span>  <span class="c1">#uniform in altitude and in wavelength &quot;grey&quot; opacity (it&#39;s a cross-section)--valid range: -50 - -10</span>
+<span class="n">logRayAmp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span>  <span class="c1">#power-law haze amplitude (log) as defined in des Etangs 2008 &quot;0&quot; would be like H2/He scat--valid range: -30 - 3</span>
+<span class="n">RaySlope</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1">#power law index 4 for Rayleigh, 0 for &quot;gray&quot;.  Valid range: 0 - 6</span>
+
+<span class="c1">#10 bar radiuss scaling param (only used in transmission)</span>
+<span class="n">xRp</span><span class="o">=</span><span class="mf">0.991</span>
+
+<span class="c1">#stuffing all variables into state vector array</span>
+<span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Tirr</span><span class="p">,</span> <span class="n">logKir</span><span class="p">,</span><span class="n">logg1</span><span class="p">,</span><span class="n">Tint</span><span class="p">,</span> <span class="n">logMet</span><span class="p">,</span> <span class="n">logCtoO</span><span class="p">,</span> <span class="n">logPQCarbon</span><span class="p">,</span><span class="n">logPQNitrogen</span><span class="p">,</span> <span class="n">Rp</span><span class="p">,</span> <span class="n">Rstar</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">logKzz</span><span class="p">,</span> <span class="n">fsed</span><span class="p">,</span><span class="n">logPbase</span><span class="p">,</span><span class="n">logCldVMR</span><span class="p">,</span> <span class="n">logKcld</span><span class="p">,</span> <span class="n">logRayAmp</span><span class="p">,</span> <span class="n">RaySlope</span><span class="p">])</span>
+
+<span class="c1">#gas scaling factors to mess with turning on various species</span>
+<span class="c1">#set to &quot;0&quot; to turn off a gas. Otherwise keep set at 1</span>
+<span class="c1">#thermochemical gas profile scaling factors</span>
+<span class="c1"># 0   1    2    3   4    5    6     7    8    9   10    11   12   13    14   15   16   17   18  19 20   21</span>
+<span class="c1">#H2O  CH4  CO  CO2 NH3  N2   HCN   H2S  PH3  C2H2 C2H6  Na    K   TiO   VO   FeH  H    H2   He   e- h-  mmw</span>
+<span class="n">gas_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span> <span class="c1">#can be made free params if desired (won&#39;t affect mmw)#can be made free params if desired (won&#39;t affect mmw)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Generate-Model-Atmosphere-&amp;-Secondary-Eclipse-Spectrum">
+<h2>Generate Model Atmosphere &amp; Secondary Eclipse Spectrum<a class="headerlink" href="#Generate-Model-Atmosphere-&-Secondary-Eclipse-Spectrum" title="Permalink to this headline">¶</a></h2>
+<p>Here we call the forward model routine “fx_emis” (think F(x)) from fm.py. fx_emis controls the input values and calls the relevent functions to compute the secondary eclipse spectrum. The inputs into fx_emis are the parameter state vector, “x”, the data wavelength grid, “wlgrid”, the gas scaling factors (for turning off particular gases), “gas_scale”, and the correlated-K tables, “xsects”. In this case,since we are simulated “data” at the same resolution as the model (R=100), we set wlgrid=-1 to
+let the spectral binning routine know not to average/convolve the spectrum. Fx then returns the simulated model spectrum (<span class="math notranslate nohighlight">\(F_p/F_{\star}\)</span>) at the native CK-table resolution, “y_mod”, the native wavenumber grid, “wno”. y_binned is the same as y_mod here since there is no model “binning/averaging”. The “atm” array contains the generated temperature-pressure profile and gas mixing ratio profiles generated under the chemically consistent assumption.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#calling forward model, fx. This will produce the (Fp/Fstar) spectrum....</span>
+<span class="n">wlgrid</span><span class="o">=-</span><span class="mi">1</span>
+<span class="n">y_binned</span><span class="p">,</span><span class="n">y_mod</span><span class="p">,</span><span class="n">wno</span><span class="p">,</span><span class="n">atm</span><span class="p">,</span><span class="n">Ftoa</span><span class="p">,</span><span class="n">Fstar</span><span class="p">,</span><span class="n">Fstar_TOA</span><span class="p">,</span><span class="n">Fup_therm</span><span class="p">,</span><span class="n">Fup_ref</span><span class="o">=</span><span class="n">fx_emis</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">wlgrid</span><span class="p">,</span><span class="n">gas_scale</span><span class="p">,</span> <span class="n">xsecs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SPECTRUM GENERATE&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Generate-Simulated-Data">
+<h2>Generate Simulated Data<a class="headerlink" href="#Generate-Simulated-Data" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">err_ppm</span><span class="o">=</span><span class="mf">30.</span> <span class="c1">#error bar in ppm (just constant here)</span>
+<span class="n">err</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wno</span><span class="p">))</span><span class="o">*</span><span class="n">err_ppm</span><span class="o">*</span><span class="mf">1E-6</span>   <span class="c1">#this would be a good spot to put pandexo generated error bars</span>
+                                     <span class="c1">#though they would have to be binned/interpolated to the model wavenumber grid</span>
+<span class="n">y_meas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">y_mod</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="c1">#adding gaussian noise</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s1">&#39;simulated_emission_JWST.txt&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">y_meas</span><span class="p">,</span> <span class="n">err</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="c1">#saveing as txt file (wl [um], Depth, err)</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Plot-Model-Atmosphere">
+<h2>Plot Model Atmosphere<a class="headerlink" href="#Plot-Model-Atmosphere" title="Permalink to this headline">¶</a></h2>
+<p>Spaghetti plot of the model atmosphere.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">FormatStrFormatter</span>
+<span class="o">%</span><span class="k">matplotlib</span> notebook
+
+<span class="c1">#unpacking variables</span>
+<span class="c1">#P is in bars</span>
+<span class="c1">#T is in K</span>
+<span class="c1">#H2O, CH4,CO,CO2,NH3,Na,K,TiO,VO,C2H2,HCN,H2S,FeH,H2,He are gas mixing ratio profiles</span>
+<span class="c1">#qc is the condensate abundance profile given an &quot;f_sed&quot; value and cloud base pressure</span>
+<span class="c1">#r_eff is the effective cloud droplet radius given (see A&amp;M 2001 or Charnay et al. 2017)</span>
+<span class="c1">#f_r is the mixing ratio array for each of the cloud droplet sizes.</span>
+<span class="n">P</span><span class="p">,</span><span class="n">T</span><span class="p">,</span> <span class="n">H2O</span><span class="p">,</span> <span class="n">CH4</span><span class="p">,</span><span class="n">CO</span><span class="p">,</span><span class="n">CO2</span><span class="p">,</span><span class="n">NH3</span><span class="p">,</span><span class="n">Na</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">TiO</span><span class="p">,</span><span class="n">VO</span><span class="p">,</span><span class="n">C2H2</span><span class="p">,</span><span class="n">HCN</span><span class="p">,</span><span class="n">H2S</span><span class="p">,</span><span class="n">FeH</span><span class="p">,</span><span class="n">H2</span><span class="p">,</span><span class="n">He</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="n">e</span><span class="p">,</span> <span class="n">Hm</span><span class="p">,</span><span class="n">qc</span><span class="p">,</span><span class="n">r_eff</span><span class="p">,</span><span class="n">f_r</span><span class="o">=</span><span class="n">atm</span>
+<span class="n">Pavg</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="n">P</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">fig2</span><span class="p">,</span> <span class="n">ax1</span><span class="o">=</span><span class="n">subplots</span><span class="p">()</span>
+<span class="c1">#feel free to plot whatever you want here....</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">H2O</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;H2O&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">CH4</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;CH4&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">CO</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;CO&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">CO2</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;CO2&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">NH3</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;darkblue&#39;</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;NH3&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">Na</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Na&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">K</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;K&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">TiO</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;TiO&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">VO</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;VO&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span><span class="n">Pavg</span><span class="p">,</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cond. VMR.&#39;</span><span class="p">)</span>  <span class="c1">#&lt;---- A&amp;M Cloud Condensate VMR profile (not droplets)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Mixing Ratio&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pressure [bar]&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogy</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mf">1E-9</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mf">1E-7</span><span class="p">])</span>
+
+<span class="c1">#plotting TP profile on other x-axis</span>
+<span class="n">ax2</span><span class="o">=</span><span class="n">ax1</span><span class="o">.</span><span class="n">twiny</span><span class="p">()</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">P</span><span class="p">,</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;4&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;TP&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Temperature [K]&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mf">0.8</span><span class="o">*</span><span class="n">T</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="mf">1.2</span><span class="o">*</span><span class="n">T</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span><span class="mi">100</span><span class="p">,</span><span class="mf">1E-6</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">tl</span> <span class="ow">in</span> <span class="n">ax2</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span> <span class="n">tl</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;./plots/atmosphere_emission_JWST_CC.pdf&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">()</span>
+<span class="c1">#close()</span>
+
+
+
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Plot-Secondary-Eclipse-Spectrum-Model-and-Data">
+<h2>Plot Secondary Eclipse Spectrum Model and Data<a class="headerlink" href="#Plot-Secondary-Eclipse-Spectrum-Model-and-Data" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">matplotlib</span> notebook
+<span class="n">ymin</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">ymax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y_mod</span><span class="p">)</span><span class="o">*</span><span class="mf">1E3</span><span class="o">*</span><span class="mf">1.2</span>
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$\lambda$ ($\mu$m)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;F$_p$/F$_</span><span class="si">{star}</span><span class="s1">$ [$</span><span class="se">\\</span><span class="s1">times 10^{-3}$]&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">errorbar</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">y_meas</span><span class="o">*</span><span class="mf">1E3</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err</span><span class="o">*</span><span class="mf">1E3</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;ok&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">y_mod</span><span class="o">*</span><span class="mf">1E3</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Total&#39;</span><span class="p">)</span>
+<span class="c1">#reflected component</span>
+<span class="n">plot</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">Fup_ref</span><span class="o">/</span><span class="n">Fstar</span><span class="o">*</span><span class="mf">1E3</span><span class="o">*</span><span class="p">(</span><span class="n">Rp</span><span class="o">/</span><span class="n">Rstar</span><span class="o">*</span><span class="mf">0.10279</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Reflected Stellar&#39;</span><span class="p">)</span>
+<span class="c1">#emission component</span>
+<span class="n">plot</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">Fup_therm</span><span class="o">/</span><span class="n">Fstar</span><span class="o">*</span><span class="mf">1E3</span><span class="o">*</span><span class="p">(</span><span class="n">Rp</span><span class="o">/</span><span class="n">Rstar</span><span class="o">*</span><span class="mf">0.10279</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Thermal Emission &#39;</span><span class="p">)</span>
+
+<span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="c1">#ax.set_yscale(&#39;log&#39;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">ScalarFormatter</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labelsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">,</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">)</span>
+<span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;./plots/emission_spectrum_JWST_CC.pdf&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+
+
+<span class="n">show</span><span class="p">()</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Play-around-with-Secondary-Eclipse-Spectrum">
+<h2>Play around with Secondary Eclipse Spectrum<a class="headerlink" href="#Play-around-with-Secondary-Eclipse-Spectrum" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Explore-cloud-contribution">
+<h3>Explore cloud contribution<a class="headerlink" href="#Explore-cloud-contribution" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">FormatStrFormatter</span>
+
+
+<span class="c1">#setup &quot;input&quot; parameters. We are defining our 1D atmosphere with these</span>
+<span class="c1">#the parameters</span>
+<span class="c1">#planet/star system params--xRp is the &quot;Rp&quot; free parameter, M right now is fixed, but could be free param</span>
+<span class="n">Rp</span><span class="o">=</span><span class="mf">1.036</span>  <span class="c1">#Planet radius in Jupiter Radii--this will be forced to be 10 bar radius--arbitrary (scaling to this is free par)</span>
+<span class="n">Rstar</span><span class="o">=</span><span class="mf">0.667</span> <span class="c1"># #Stellar Radius in Solar Radii</span>
+<span class="n">M</span> <span class="o">=</span><span class="mf">2.034</span>  <span class="c1">#Mass in Jupiter Masses</span>
+<span class="n">D</span><span class="o">=</span><span class="mf">0.01526</span>   <span class="c1">#semimajor axis in AU--for reflected light component</span>
+
+<span class="c1">#TP profile params (3--Guillot 2010, Parmentier &amp; Guillot 2013--see Line et al. 2013a for implementation)</span>
+<span class="n">Tirr</span><span class="o">=</span><span class="mi">1400</span>     <span class="c1">#Irradiation temperature as defined in Guillot 2010</span>
+<span class="n">logKir</span><span class="o">=-</span><span class="mf">1.5</span>  <span class="c1">#TP profile IR opacity (log there-of) controlls the &quot;vertical&quot; location of the gradient</span>
+<span class="n">logg1</span><span class="o">=-</span><span class="mf">0.7</span>     <span class="c1">#single channel Vis/IR (log) opacity. Controls the delta T between deep T and TOA T</span>
+<span class="n">Tint</span><span class="o">=</span><span class="mi">200</span> <span class="c1">#interior temperature...this would be the &quot;effective temperature&quot; if object were not irradiated</span>
+
+<span class="c1">#Composition parameters---assumes &quot;chemically consistent model&quot; described in Kreidberg et al. 2015</span>
+<span class="n">logMet</span><span class="o">=</span><span class="mf">0.0</span>  <span class="c1">#.   #Metallicity relative to solar log--solar is 0, 10x=1, 0.1x = -1: valid range is -1.5 - 3.0</span>
+<span class="n">logCtoO</span><span class="o">=-</span><span class="mf">0.26</span>   <span class="c1">#log C-to-O ratio: log solar is -0.26: valid range is -1.0 - 0.3</span>
+<span class="n">logPQCarbon</span><span class="o">=-</span><span class="mf">5.5</span>  <span class="c1">#CH4, CO, H2O Qunech pressure--forces CH4, CO, and H2O to constant value at quench pressure value: valid range -6.0 - 1.5</span>
+<span class="n">logPQNitrogen</span><span class="o">=-</span><span class="mf">5.5</span>  <span class="c1">#N2, NH3 Quench pressure--forces N2 and NH3 to &quot;&quot;</span>
+
+<span class="c1">#Ackerman &amp; Marley 2001 Cloud parameters--physically motivated with Mie particles</span>
+<span class="n">logKzz</span><span class="o">=</span><span class="mi">7</span> <span class="c1">#log Kzz (cm2/s)--valid range: 2 - 11 -- higher values make larger particles</span>
+<span class="n">fsed</span><span class="o">=</span><span class="mf">2.0</span> <span class="c1">#sediminetation efficiency--valid range: 0.5 - 5--lower values make &quot;puffier&quot; more extended cloud</span>
+<span class="n">logPbase</span><span class="o">=-</span><span class="mf">1.0</span>  <span class="c1">#cloud base pressure--valid range: -6.0 - 1.5</span>
+<span class="n">logCldVMR</span><span class="o">=-</span><span class="mf">25.5</span> <span class="c1">#cloud condensate base mixing ratio (e.g, see Fortney 2005)--valid range: -15 - -2.0</span>
+
+<span class="c1">#for second model</span>
+<span class="n">logKzz2</span><span class="o">=</span><span class="mi">7</span> <span class="c1">#log Kzz (cm2/s)--valid range: 2 - 11 -- higher values make larger particles</span>
+<span class="n">fsed2</span><span class="o">=</span><span class="mf">0.5</span> <span class="c1">#sediminetation efficiency--valid range: 0.5 - 5--lower values make &quot;puffier&quot; more extended cloud</span>
+<span class="n">logPbase2</span><span class="o">=</span><span class="mf">1.0</span>  <span class="c1">#cloud base pressure--valid range: -6.0 - 1.5</span>
+<span class="n">logCldVMR2</span><span class="o">=-</span><span class="mf">3.</span> <span class="c1">#cloud condensate base mixing ratio (e.g, see Fortney 2005)--valid range: -15 - -2.0</span>
+
+
+<span class="c1">#simple &#39;grey+rayleigh&#39; parameters just in case you don&#39;t want to use a physically motivated cloud</span>
+<span class="c1">#(most are just made up anyway since we don&#39;t really understand all of the micro-physics.....)</span>
+<span class="n">logKcld</span> <span class="o">=</span> <span class="o">-</span><span class="mi">40</span>  <span class="c1">#uniform in altitude and in wavelength &quot;grey&quot; opacity (it&#39;s a cross-section)--valid range: -50 - -10</span>
+<span class="n">logRayAmp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span>  <span class="c1">#power-law haze amplitude (log) as defined in des Etangs 2008 &quot;0&quot; would be like H2/He scat--valid range: -30 - 3</span>
+<span class="n">RaySlope</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1">#power law index 4 for Rayleigh, 0 for &quot;gray&quot;.  Valid range: 0 - 6</span>
+
+<span class="c1">#10 bar radiuss scaling param (only used in transmission)</span>
+<span class="n">xRp</span><span class="o">=</span><span class="mf">0.991</span>
+
+<span class="c1">#stuffing all variables into state vector array</span>
+<span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Tirr</span><span class="p">,</span> <span class="n">logKir</span><span class="p">,</span><span class="n">logg1</span><span class="p">,</span><span class="n">Tint</span><span class="p">,</span> <span class="n">logMet</span><span class="p">,</span> <span class="n">logCtoO</span><span class="p">,</span> <span class="n">logPQCarbon</span><span class="p">,</span><span class="n">logPQNitrogen</span><span class="p">,</span> <span class="n">Rp</span><span class="p">,</span> <span class="n">Rstar</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">logKzz</span><span class="p">,</span> <span class="n">fsed</span><span class="p">,</span><span class="n">logPbase</span><span class="p">,</span><span class="n">logCldVMR</span><span class="p">,</span> <span class="n">logKcld</span><span class="p">,</span> <span class="n">logRayAmp</span><span class="p">,</span> <span class="n">RaySlope</span><span class="p">])</span>
+<span class="n">x2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Tirr</span><span class="p">,</span> <span class="n">logKir</span><span class="p">,</span><span class="n">logg1</span><span class="p">,</span><span class="n">Tint</span><span class="p">,</span> <span class="n">logMet</span><span class="p">,</span> <span class="n">logCtoO</span><span class="p">,</span> <span class="n">logPQCarbon</span><span class="p">,</span><span class="n">logPQNitrogen</span><span class="p">,</span> <span class="n">Rp</span><span class="p">,</span> <span class="n">Rstar</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">logKzz2</span><span class="p">,</span> <span class="n">fsed2</span><span class="p">,</span><span class="n">logPbase2</span><span class="p">,</span><span class="n">logCldVMR2</span><span class="p">,</span> <span class="n">logKcld</span><span class="p">,</span> <span class="n">logRayAmp</span><span class="p">,</span> <span class="n">RaySlope</span><span class="p">])</span>
+
+
+<span class="c1">#gas scaling factors to mess with turning on various species</span>
+<span class="c1">#set to &quot;0&quot; to turn off a gas. Otherwise keep set at 1</span>
+<span class="c1">#thermochemical gas profile scaling factors</span>
+<span class="c1"># 0   1    2    3   4    5    6     7    8    9   10    11   12   13    14   15   16   17   18  19 20   21</span>
+<span class="c1">#H2O  CH4  CO  CO2 NH3  N2   HCN   H2S  PH3  C2H2 C2H6  Na    K   TiO   VO   FeH  H    H2   He   e- h-  mmw</span>
+<span class="n">gas_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span> <span class="c1">#can be made free params if desired (won&#39;t affect mmw)#can be made free params if desired (won&#39;t affect mmw)</span>
+
+<span class="n">y_binned</span><span class="p">,</span><span class="n">y_mod</span><span class="p">,</span><span class="n">wno</span><span class="p">,</span><span class="n">atm</span><span class="p">,</span><span class="n">Ftoa</span><span class="p">,</span><span class="n">Fstar</span><span class="p">,</span><span class="n">Fstar_TOA</span><span class="p">,</span><span class="n">Fup_therm</span><span class="p">,</span><span class="n">Fup_ref</span><span class="o">=</span><span class="n">fx_emis</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">wlgrid</span><span class="p">,</span><span class="n">gas_scale</span><span class="p">,</span> <span class="n">xsecs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SPECTRUM GENERATE1&#39;</span><span class="p">)</span>
+<span class="n">y_binned2</span><span class="p">,</span><span class="n">y_mod2</span><span class="p">,</span><span class="n">wno2</span><span class="p">,</span><span class="n">atm2</span><span class="p">,</span><span class="n">Ftoa2</span><span class="p">,</span><span class="n">Fstar2</span><span class="p">,</span><span class="n">Fstar_TOA2</span><span class="p">,</span><span class="n">Fup_therm2</span><span class="p">,</span><span class="n">Fup_ref2</span><span class="o">=</span><span class="n">fx_emis</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">wlgrid</span><span class="p">,</span><span class="n">gas_scale</span><span class="p">,</span> <span class="n">xsecs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SPECTRUM GENERATE2&#39;</span><span class="p">)</span>
+
+<span class="n">ymin</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">ymax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y_mod</span><span class="p">)</span><span class="o">*</span><span class="mf">1E3</span><span class="o">*</span><span class="mf">1.2</span>
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$\lambda$ ($\mu$m)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;F$_p$/F$_</span><span class="si">{star}</span><span class="s1">$ [$</span><span class="se">\\</span><span class="s1">times 10^{-3}$]&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">errorbar</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">y_meas</span><span class="o">*</span><span class="mf">1E3</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err</span><span class="o">*</span><span class="mf">1E3</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;ok&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">y_mod</span><span class="o">*</span><span class="mf">1E3</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Total&#39;</span><span class="p">)</span>
+<span class="c1">#reflected component</span>
+<span class="n">plot</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">Fup_ref</span><span class="o">/</span><span class="n">Fstar</span><span class="o">*</span><span class="mf">1E3</span><span class="o">*</span><span class="p">(</span><span class="n">Rp</span><span class="o">/</span><span class="n">Rstar</span><span class="o">*</span><span class="mf">0.10279</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Reflected Stellar&#39;</span><span class="p">)</span>
+<span class="c1">#emission component</span>
+<span class="n">plot</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">Fup_therm</span><span class="o">/</span><span class="n">Fstar</span><span class="o">*</span><span class="mf">1E3</span><span class="o">*</span><span class="p">(</span><span class="n">Rp</span><span class="o">/</span><span class="n">Rstar</span><span class="o">*</span><span class="mf">0.10279</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Thermal Emission &#39;</span><span class="p">)</span>
+
+<span class="n">plot</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">y_mod2</span><span class="o">*</span><span class="mf">1E3</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Total 2&#39;</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="c1">#reflected component</span>
+<span class="n">plot</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">Fup_ref2</span><span class="o">/</span><span class="n">Fstar2</span><span class="o">*</span><span class="mf">1E3</span><span class="o">*</span><span class="p">(</span><span class="n">Rp</span><span class="o">/</span><span class="n">Rstar</span><span class="o">*</span><span class="mf">0.10279</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Reflected Stellar 2&#39;</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="c1">#emission component</span>
+<span class="n">plot</span><span class="p">(</span><span class="mf">1E4</span><span class="o">/</span><span class="n">wno</span><span class="p">,</span> <span class="n">Fup_therm2</span><span class="o">/</span><span class="n">Fstar2</span><span class="o">*</span><span class="mf">1E3</span><span class="o">*</span><span class="p">(</span><span class="n">Rp</span><span class="o">/</span><span class="n">Rstar</span><span class="o">*</span><span class="mf">0.10279</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Thermal Emission 2 &#39;</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+
+
+<span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="c1">#ax.set_yscale(&#39;log&#39;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">ScalarFormatter</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labelsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">,</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">)</span>
+
+<span class="n">show</span><span class="p">()</span>
+
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Doing-the-Retrieval-“off-line”-with-PyMultiNest">
+<h2>Doing the Retrieval “off line” with PyMultiNest<a class="headerlink" href="#Doing-the-Retrieval-“off-line”-with-PyMultiNest" title="Permalink to this headline">¶</a></h2>
+<p>We’ll leave it as an exercise for the “reader” to adapt one of the other routines</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="CHIMERA_EMISSION_DEMO_WASP43b_WFC3.html" class="btn btn-neutral float-right" title="HST WFC3 Secondary Eclipse/Emission Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Mike R. Line
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
