@@ -18,6 +18,39 @@ import pdb
 import scipy
 import datetime
 import os
+import pysynphot as psyn
+### stellar spec ### 
+
+def make_stellar(temp, logMH, logg, database, outfile):
+    """
+    Make stellar using pysynphot
+
+    Parameters
+    ----------
+    temp : float 
+        temperature 
+    logMH : float 
+        log stellar metallicity 
+    logg : float 
+        stellar logg
+    database : str 
+        Stellar database to choose from 
+    outfile : str 
+        stellar h5 output file
+
+    Returns
+    -------
+    N/A just output file
+    """
+    sp = psyn.Icat(database, temp, logMH, logg)
+    sp.convert('flam') ## initial units erg/cm^2/s/ Angst
+    wave=sp.wave*1e-10  #in meters
+    fluxmks = sp.flux*1e-7*1e4*1e10 #in W/m2/m
+    f = h5py.File(outfile,'w')
+    f.create_dataset('lambdastar',data=wave)
+    f.create_dataset('Fstar0',data=fluxmks)
+    f.close()
+
 
 ##############################   OPACITY ROUTINES  #################################
 ####################################################################################
