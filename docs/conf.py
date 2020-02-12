@@ -13,7 +13,8 @@
 import os
 import sys
 import sphinx_rtd_theme
-sys.path.insert(0, os.path.abspath('/Users/nbatalh1/Documents/codes/chimera/CHIMERA/chimera/'))
+#sys.path.insert(0, os.path.abspath('/Users/nbatalh1/Documents/codes/chimera/CHIMERA/chimera/'))
+sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(),'..','chimera')))
 
 
 # -- Project information -----------------------------------------------------
