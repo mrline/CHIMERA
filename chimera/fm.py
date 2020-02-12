@@ -1734,7 +1734,26 @@ def fx_trans(x,wlgrid,gas_scale, xsects):
 
 
 def fx_trans_free(x,wlgrid,gas_scale, xsects):
-    """Transmission spectroscopy
+    """Transmission spectrscopy with free chemistry
+
+    Parameters
+    ----------
+    x : list 
+        See tutorials for description of list and order of list 
+    wlgrid : ndarray
+        Array to regrid final specturm on (micron)
+    gas_scale : ndarray
+        array to scale mixing ratio of gases 
+    xsects : list 
+        cross section array from `xsecs` function 
+
+    Returns
+    -------
+    y_binned,F,wno,chemarr
+
+    binned array of spectrum, high res spectrum, og wavenumber grid, chemistry array
+    which includes: 
+    chemarr = [P,T, H2Oarr, CH4arr,COarr,CO2arr,NH3arr,Naarr,Karr,TiOarr,VOarr,C2H2arr,HCNarr,H2Sarr,FeHarr,H2arr,Hearr,Harr, earr, Hmarr,qc,r_eff,f_r])
     """
     #UNPACKING PARAMETER VECTOR.......
     #Unpacking Guillot 2010 TP profile params (3 params)
@@ -1817,7 +1836,22 @@ def fx_trans_free(x,wlgrid,gas_scale, xsects):
 
 
 def fx_emis(x,wlgrid,gas_scale, xsects):
-    """Emission spectroscopy main function
+    """Emission spectrscopy
+
+    Parameters
+    ----------
+    x : list 
+        See tutorials for description of list and order of list 
+    wlgrid : ndarray
+        Array to regrid final specturm on (micron)
+    gas_scale : ndarray
+        array to scale mixing ratio of gases 
+    xsects : list 
+        cross section array from `xsecs` function 
+
+    Returns
+    -------
+    FpFstar_binned,FpFstar,wno,chemarr, Ftoa,Fstar,Fstar_TOA,Fup_therm[:,0],Fup_ref[:,0]   
     """   
     #Unpacking Guillot 2010 TP profile params (3 params)
     Tirr=x[0]
