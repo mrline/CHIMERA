@@ -156,6 +156,7 @@ def xsects(wnomin, wnomax, observatory, directory, stellar_file=None,
             raise Exception('Invalid gauss point choice.')
 
         filename = '_CK_STIS_WFC3_'+gp+'gp_2000_30000wno.h5'
+        filename_MIE = '_r_0.01_300um_wl_0.3_200um_interp_STIS_WFC3_2000_30000wno.h5'
 
     elif observatory =='JWST':
         if gauss_pts == 'default': 
@@ -165,6 +166,8 @@ def xsects(wnomin, wnomax, observatory, directory, stellar_file=None,
         else: 
             raise Exception('Invalid gauss point choice.')
         filename = '_CK_R100_'+gp+'gp_50_30000wno.h5'
+        filename_MIE = '_r_0.01_300um_wl_0.3_200um_interp_R100_20gp_50_30000wno.h5'
+
     else: 
         raise Exception ('Pick a valid observatory: HST or JWST')
 
@@ -227,7 +230,7 @@ def xsects(wnomin, wnomax, observatory, directory, stellar_file=None,
         Fstar = [np.nan]
 
     #loading mie coefficients-----------------------------
-    file=os.path.join(directory, 'MIE_COEFFS',cond_name+'_r_0.01_300um_wl_0.3_200um_interp_R100_20gp_50_30000wno.h5')
+    file=os.path.join(directory, 'MIE_COEFFS',cond_name+filename_MIE)
     hf=h5py.File(file, 'r')
     wno_M=np.array(hf['wno_M'])
     radius=np.array(hf['radius'])
