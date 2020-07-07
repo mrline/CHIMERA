@@ -1,0 +1,11 @@
+*.h5
+.DS_Store
+*.pyc
+
+
+# Installation
+build/
+dist/
+*.egg-info/
+.ipynb_checkpoints/*
+__pycache__/*

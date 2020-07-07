@@ -18,6 +18,39 @@ import pdb
 import scipy
 import datetime
 import os
+import pysynphot as psyn
+### stellar spec ### 
+
+def make_stellar(temp, logMH, logg, database, outfile):
+    """
+    Make stellar using pysynphot
+
+    Parameters
+    ----------
+    temp : float 
+        temperature 
+    logMH : float 
+        log stellar metallicity 
+    logg : float 
+        stellar logg
+    database : str 
+        Stellar database to choose from 
+    outfile : str 
+        stellar h5 output file
+
+    Returns
+    -------
+    N/A just output file
+    """
+    sp = psyn.Icat(database, temp, logMH, logg)
+    sp.convert('flam') ## initial units erg/cm^2/s/ Angst
+    wave=sp.wave*1e-10  #in meters
+    fluxmks = sp.flux*1e-7*1e4*1e10 #in W/m2/m
+    f = h5py.File(outfile,'w')
+    f.create_dataset('lambdastar',data=wave)
+    f.create_dataset('Fstar0',data=fluxmks)
+    f.close()
+
 
 ##############################   OPACITY ROUTINES  #################################
 ####################################################################################
@@ -123,6 +156,7 @@ def xsects(wnomin, wnomax, observatory, directory, stellar_file=None,
             raise Exception('Invalid gauss point choice.')
 
         filename = '_CK_STIS_WFC3_'+gp+'gp_2000_30000wno.h5'
+        filename_MIE = '_r_0.01_300um_wl_0.3_200um_interp_STIS_WFC3_2000_30000wno.h5'
 
     elif observatory =='JWST':
         if gauss_pts == 'default': 
@@ -132,6 +166,8 @@ def xsects(wnomin, wnomax, observatory, directory, stellar_file=None,
         else: 
             raise Exception('Invalid gauss point choice.')
         filename = '_CK_R100_'+gp+'gp_50_30000wno.h5'
+        filename_MIE = '_r_0.01_300um_wl_0.3_200um_interp_R100_20gp_50_30000wno.h5'
+
     else: 
         raise Exception ('Pick a valid observatory: HST or JWST')
 
@@ -194,7 +230,7 @@ def xsects(wnomin, wnomax, observatory, directory, stellar_file=None,
         Fstar = [np.nan]
 
     #loading mie coefficients-----------------------------
-    file=os.path.join(directory, 'MIE_COEFFS',cond_name+'_r_0.01_300um_wl_0.3_200um_interp_R100_20gp_50_30000wno.h5')
+    file=os.path.join(directory, 'MIE_COEFFS',cond_name+filename_MIE)
     hf=h5py.File(file, 'r')
     wno_M=np.array(hf['wno_M'])
     radius=np.array(hf['radius'])
@@ -1570,6 +1606,25 @@ def TP(Teq, Teeff, g00, kv1, kv2, kth, alpha):
 
 def fx_trans(x,wlgrid,gas_scale, xsects):
     """Transmission spectrscopy
+
+    Parameters
+    ----------
+    x : list 
+        See tutorials for description of list and order of list 
+    wlgrid : ndarray
+        Array to regrid final specturm on (micron)
+    gas_scale : ndarray
+        array to scale mixing ratio of gases 
+    xsects : list 
+        cross section array from `xsecs` function 
+
+    Returns
+    -------
+    y_binned,F,wno,chemarr
+
+    binned array of spectrum, high res spectrum, og wavenumber grid, chemistry array
+    which includes: 
+    chemarr = [P,T, H2Oarr, CH4arr,COarr,CO2arr,NH3arr,Naarr,Karr,TiOarr,VOarr,C2H2arr,HCNarr,H2Sarr,FeHarr,H2arr,Hearr,Harr, earr, Hmarr,qc,r_eff,f_r])
     """
 
     #print(x)
@@ -1682,7 +1737,26 @@ def fx_trans(x,wlgrid,gas_scale, xsects):
 
 
 def fx_trans_free(x,wlgrid,gas_scale, xsects):
-    """Transmission spectroscopy
+    """Transmission spectrscopy with free chemistry
+
+    Parameters
+    ----------
+    x : list 
+        See tutorials for description of list and order of list 
+    wlgrid : ndarray
+        Array to regrid final specturm on (micron)
+    gas_scale : ndarray
+        array to scale mixing ratio of gases 
+    xsects : list 
+        cross section array from `xsecs` function 
+
+    Returns
+    -------
+    y_binned,F,wno,chemarr
+
+    binned array of spectrum, high res spectrum, og wavenumber grid, chemistry array
+    which includes: 
+    chemarr = [P,T, H2Oarr, CH4arr,COarr,CO2arr,NH3arr,Naarr,Karr,TiOarr,VOarr,C2H2arr,HCNarr,H2Sarr,FeHarr,H2arr,Hearr,Harr, earr, Hmarr,qc,r_eff,f_r])
     """
     #UNPACKING PARAMETER VECTOR.......
     #Unpacking Guillot 2010 TP profile params (3 params)
@@ -1765,7 +1839,22 @@ def fx_trans_free(x,wlgrid,gas_scale, xsects):
 
 
 def fx_emis(x,wlgrid,gas_scale, xsects):
-    """Emission spectroscopy main function
+    """Emission spectrscopy
+
+    Parameters
+    ----------
+    x : list 
+        See tutorials for description of list and order of list 
+    wlgrid : ndarray
+        Array to regrid final specturm on (micron)
+    gas_scale : ndarray
+        array to scale mixing ratio of gases 
+    xsects : list 
+        cross section array from `xsecs` function 
+
+    Returns
+    -------
+    FpFstar_binned,FpFstar,wno,chemarr, Ftoa,Fstar,Fstar_TOA,Fup_therm[:,0],Fup_ref[:,0]   
     """   
     #Unpacking Guillot 2010 TP profile params (3 params)
     Tirr=x[0]
