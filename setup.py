@@ -66,7 +66,8 @@ setup(
           'photutils',
           'astropy',
           'scipy',
-          'pysynphot'
+          'pysynphot',
+          'h5py'
           ], 
     zip_safe = False,
 )
