@@ -40,7 +40,7 @@ except ImportError:
 # also be placed in the setup.cfg, as will be demonstrated in a future update
 # to this sample package.
 setup(
-    name='CHIMERA', 
+    name='chimera-exo', 
     version = '1.0',
     description = 'exoplanet code for transmission and emission spectroscopy',
     long_description = 'README.rst',
